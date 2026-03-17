@@ -1,0 +1,250 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>LeverUp Playbook Architecture</title>
+  <meta name="description" content="LeverUp Playbook Architecture 中文网页版" />
+  
+<style>
+:root{
+  --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC",
+               "Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
+  --border-radius-lg: 20px;
+  --border-radius-md: 14px;
+  --color-border-tertiary: #d9dde5;
+  --color-border-secondary: #bcc3cf;
+  --color-background-secondary: #ffffff;
+  --color-text-primary: #111827;
+  --color-text-secondary: #667085;
+  --color-text-tertiary: #98a2b3;
+}
+html,body{
+  background:#f5f7fb;
+  color:var(--color-text-primary);
+}
+.page{
+  max-width:1200px;
+  margin:0 auto;
+  padding:32px 20px 48px;
+}
+.hero{
+  margin-bottom:24px;
+  padding:24px 28px;
+  border-radius:24px;
+  background:linear-gradient(135deg,#ffffff 0%,#f7f9ff 100%);
+  border:1px solid #e6eaf2;
+  box-shadow:0 10px 30px rgba(17,24,39,.06);
+}
+.hero h1{
+  font-size:30px;
+  line-height:1.2;
+  margin-bottom:10px;
+}
+.hero p{
+  font-size:15px;
+  line-height:1.75;
+  color:var(--color-text-secondary);
+}
+.card{
+  padding:18px;
+  border-radius:24px;
+  background:#fff;
+  border:1px solid #e6eaf2;
+  box-shadow:0 10px 30px rgba(17,24,39,.04);
+}
+.footer-note{
+  margin-top:18px;
+  font-size:12px;
+  color:var(--color-text-secondary);
+  text-align:center;
+}
+@media(prefers-color-scheme:dark){
+  :root{
+    --color-border-tertiary: #333a46;
+    --color-border-secondary: #4b5563;
+    --color-background-secondary: #151922;
+    --color-text-primary: #f3f4f6;
+    --color-text-secondary: #b7c0cf;
+    --color-text-tertiary: #8b95a7;
+  }
+  html,body{background:#0b0f16;}
+  .hero,.card{
+    background:#101520;
+    border-color:#1f2937;
+    box-shadow:none;
+  }
+  .hero{
+    background:linear-gradient(135deg,#121826 0%,#0f1420 100%);
+  }
+}
+</style>
+
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <h1>LeverUp Playbook Architecture</h1>
+      <p>这是根据你提供的内容整理成的单页网页版，适合直接部署到 Vercel。打开后可在电脑和手机浏览，也支持深色模式。</p>
+    </section>
+    <section class="card">
+      
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-sans)}
+.layer{margin:0 0 2px;padding:16px 20px;border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary)}
+.layer-title{font-size:15px;font-weight:500;color:var(--color-text-primary);margin:0 0 12px}
+.layer-sub{font-size:12px;color:var(--color-text-secondary);margin:-8px 0 12px}
+.flow-row{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
+.box{padding:10px 14px;border-radius:var(--border-radius-md);border:0.5px solid;font-size:12px;line-height:1.5;flex:1;min-width:120px;cursor:default;transition:transform .15s}
+.box:hover{transform:translateY(-1px)}
+.box b{display:block;font-size:13px;font-weight:500;margin:0 0 2px}
+.box-purple{background:#EEEDFE;border-color:#AFA9EC;color:#3C3489}
+.box-teal{background:#E1F5EE;border-color:#5DCAA5;color:#085041}
+.box-blue{background:#E6F1FB;border-color:#85B7EB;color:#0C447C}
+.box-amber{background:#FAEEDA;border-color:#FAC775;color:#633806}
+.box-coral{background:#FAECE7;border-color:#F0997B;color:#712B13}
+.box-green{background:#EAF3DE;border-color:#97C459;color:#27500A}
+.box-pink{background:#FBEAF0;border-color:#ED93B1;color:#72243E}
+.box-gray{background:#F1EFE8;border-color:#B4B2A9;color:#444441}
+.box-red{background:#FCEBEB;border-color:#F09595;color:#791F1F}
+@media(prefers-color-scheme:dark){
+.box-purple{background:#26215C;border-color:#534AB7;color:#CECBF6}
+.box-teal{background:#04342C;border-color:#0F6E56;color:#9FE1CB}
+.box-blue{background:#042C53;border-color:#185FA5;color:#B5D4F4}
+.box-amber{background:#412402;border-color:#854F0B;color:#FAC775}
+.box-coral{background:#4A1B0C;border-color:#993C1D;color:#F5C4B3}
+.box-green{background:#173404;border-color:#3B6D11;color:#C0DD97}
+.box-pink{background:#4B1528;border-color:#993556;color:#F4C0D1}
+.box-gray{background:#2C2C2A;border-color:#5F5E5A;color:#D3D1C7}
+.box-red{background:#501313;border-color:#A32D2D;color:#F7C1C1}
+}
+.arrow-down{text-align:center;font-size:18px;color:var(--color-text-tertiary);padding:4px 0;line-height:1}
+.arrow-label{font-size:11px;color:var(--color-text-secondary);text-align:center;padding:0 0 2px}
+.divider{height:0;border-top:0.5px dashed var(--color-border-tertiary);margin:12px 0}
+.feedback-arrow{display:flex;align-items:center;gap:8px;padding:8px 0}
+.feedback-arrow .line{flex:1;height:0;border-top:1.5px dashed var(--color-border-secondary)}
+.feedback-arrow .label{font-size:11px;color:var(--color-text-secondary);white-space:nowrap}
+.section-ref{font-size:11px;color:var(--color-text-tertiary);font-weight:400}
+</style>
+
+<div style="padding:0.5rem 0">
+
+<div class="layer">
+<div class="layer-title">基础层 — 身份、知识与权限 <span class="section-ref">S0 S1 S2</span></div>
+<div class="flow-row">
+<div class="box box-purple"><b>S0 项目知识底座</b>核心差异化、红线表述、不能说的话</div>
+<div class="box box-purple"><b>S1 目标</b>4 件事：支持主账号、获得注意、建立网络、显得原生</div>
+<div class="box box-purple"><b>S2 角色与权限</b>intern/growth/official 权限表 + 语气人格示例</div>
+</div>
+</div>
+
+<div class="arrow-down">↓</div>
+<div class="arrow-label">所有决策都引用基础层</div>
+
+<div class="layer">
+<div class="layer-title">决策引擎 — 回什么、怎么回 <span class="section-ref">S3 S4 S5 S6</span></div>
+<div class="flow-row" style="margin-bottom:10px">
+<div class="box box-teal"><b>Rule 1 — 快速过滤</b>5 条硬指标，任一命中即放行。只管"看不看"</div>
+<div class="box box-teal"><b>Rule 2 — 设目标</b>每条回复必须先选 1 个目标</div>
+<div class="box box-teal"><b>Rule 3 — 定投入</b>P0-P4 × L1/L2/L3 查表</div>
+</div>
+<div class="flow-row" style="margin-bottom:10px">
+<div class="box box-teal"><b>Rule 4 — 不 generic</b>黑名单：gm、bullish、huge…</div>
+<div class="box box-teal"><b>Rule 5 — 有增量</b>至少增加 1 项：humor / observation / data…</div>
+<div class="box box-teal"><b>Rule 6 — 不硬蹭</b>自然提及 vs 强行带项目的边界</div>
+</div>
+<div class="divider"></div>
+<div class="flow-row" style="margin-bottom:10px">
+<div class="box box-blue"><b>S4.1 Outgoing 优先级</b>P0→P1→P2→P3→P4 回谁</div>
+<div class="box box-blue"><b>S4.2 Incoming 优先级</b>Step1 互动方式分流 → Step2 按序匹配表</div>
+</div>
+<div class="divider"></div>
+<div class="flow-row">
+<div class="box box-amber"><b>S5 速度轨（L1）</b>3 项检查：相关 + 有增量 + 不 generic → 发布</div>
+<div class="box box-amber"><b>S5 质量轨（L2/L3）</b>判断 thread 类型 → 选目标 → 4 项检查（+不硬蹭）→ 发布</div>
+<div class="box box-gray"><b>S5.3 时间窗口</b>&lt;5 分钟最优 → 5-30 正常 → 30-60 衰减 → &gt;1 小时跳过</div>
+</div>
+</div>
+
+<div class="arrow-down">↓</div>
+<div class="arrow-label">决策链：R1 → R2 → R3 → S5 轨道检查 → 发布或跳过</div>
+
+<div class="layer">
+<div class="layer-title">执行层 — 7×24 持续运行 <span class="section-ref">S6 S7</span></div>
+<div class="flow-row" style="margin-bottom:10px">
+<div class="box box-coral"><b>S6 输出格式</b>质量轨：9 字段思考模板；速度轨：3 字段极简模板</div>
+<div class="box box-coral"><b>S7.1 运行模式</b>持续扫描 + 每日 UTC 0:00 触发日结 + 周日触发周结</div>
+</div>
+<div class="flow-row" style="margin-bottom:10px">
+<div class="box box-coral"><b>S7.2 扫描频率</b>Incoming：[X]分钟、主账号：[X]分钟、P1：[X]分钟、P2-3：[X]小时、竞品：[X]小时</div>
+<div class="box box-coral"><b>S7.3 实时回复队列</b>动态队列，按对象价值 > 时机新鲜度 > 关系升温排序</div>
+</div>
+<div class="flow-row">
+<div class="box box-coral"><b>S7.3 单条实时检查</b>4 个问题：为什么回、目标、投入等级、网络位置</div>
+<div class="box box-coral"><b>S7.3 格式偏好</b>优先用 9C 有效格式，回避 9D 失败模式</div>
+</div>
+</div>
+
+<div class="arrow-down">↓</div>
+<div class="arrow-label">每日 UTC 0:00 / 每周日 UTC 0:00</div>
+
+<div class="layer">
+<div class="layer-title">复盘与进化闭环 <span class="section-ref">S7.4-7.6 S8</span></div>
+<div class="flow-row" style="margin-bottom:10px">
+<div class="box box-green"><b>S7.4 日结报告</b>固定格式：统计、最佳/最差回复、Incoming 响应率、关系进展、明日优先</div>
+<div class="box box-green"><b>S7.5 日结自检</b>记忆更新（9C/9D/9B）+ 策略微调（扫描频率、对象平衡、L2+ 推动）</div>
+<div class="box box-green"><b>S7.6 每日达标线</b>≥1 次 L2+、Incoming 30 分钟内 100%、日结已提交</div>
+</div>
+<div class="divider"></div>
+<div class="flow-row">
+<div class="box box-green"><b>S8.1 周结报告</b>7 天汇总：分布、结果 top3、网络进展、格式/模式复盘</div>
+<div class="box box-green"><b>S8.2 周结自检</b>对象再平衡、投入再平衡、模式迭代、EB 清理、竞品刷新</div>
+<div class="box box-green"><b>S8.3-8.4 周达标线 + 团队 KPI</b>[待团队补充]</div>
+</div>
+</div>
+
+<div class="feedback-arrow"><span class="label">↑ 更新记忆</span><span class="line"></span><span class="label">下次扫描时读取 ↓</span></div>
+
+<div class="layer">
+<div class="layer-title">记忆系统 — 唯一数据源 <span class="section-ref">S9</span></div>
+<div class="layer-sub">本节只定义结构。更新由 S7.5（日结自检）和 S8.2（周结自检）执行</div>
+<div class="flow-row">
+<div class="box box-pink"><b>9A 优先账号</b>[待补充] 最重要的目标列表</div>
+<div class="box box-pink"><b>9B 回流账号</b>谁回过你。衰减：2 周→观察，4 周→移出</div>
+<div class="box box-pink"><b>9C 有效格式</b>状态：新增 → 已验证有效 → 周结确认保留</div>
+<div class="box box-pink"><b>9D 失败模式</b>状态：新增 → 已验证失败 → 周结确认淘汰</div>
+<div class="box box-pink"><b>9E 竞品追踪</b>功能、事故、叙事、数据。频率见 S7.2</div>
+</div>
+<div style="margin-top:10px">
+<div class="box box-pink" style="max-width:420px"><b>关系升温路径</b>陌生 → 识别 → 回流 → 稳定 → 高价值 → 深度合作</div>
+</div>
+</div>
+
+<div class="arrow-down">↓</div>
+<div class="arrow-label">FUD/质疑型 thread 触发</div>
+
+<div class="layer">
+<div class="layer-title">异常处理 <span class="section-ref">S10</span></div>
+<div class="flow-row">
+<div class="box box-red"><b>10.1 FUD 分级</b>轻度（好奇）→ 中度（带论点批评）→ 重度（恶意抹黑）。每级有示例 + 按权限应对</div>
+<div class="box box-red"><b>10.2 应对原则</b>不承诺、不泄露、不对骂、只用事实</div>
+<div class="box box-red"><b>10.3 回应框架</b>轻度：引导看文档。中度：机制事实回应。重度：截图 + 上报</div>
+<div class="box box-red"><b>10.4 绝对红线</b>造谣 rug / 虚假漏洞 / 人身攻击 → 沉默 + 标记团队</div>
+</div>
+</div>
+
+<div style="margin-top:16px;padding:12px 16px;border-radius:var(--border-radius-md);border:0.5px dashed var(--color-border-secondary);font-size:12px;color:var(--color-text-secondary);line-height:1.8">
+<b style="color:var(--color-text-primary)">三个运行循环</b><br>
+<b>持续循环：</b>扫描 → R1 过滤 → R2 设目标 → R3 定投入 → S5 轨道检查 → 发布 → 记录数据<br>
+<b>日循环（UTC 0:00）：</b>日结报告 → 自检 → 更新 S9 记忆 → 微调策略 → 读取最新记忆 → 继续运行<br>
+<b>周循环（周日 UTC 0:00）：</b>先完成日结 → 周结报告 → 自检 → 调整策略 + 清理记忆 → 读取最新记忆 → 继续运行
+</div>
+
+</div>
+
+    </section>
+    <div class="footer-note">Deployed-ready static page for Vercel</div>
+  </main>
+</body>
+</html>
