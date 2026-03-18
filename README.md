@@ -1,3 +1,3 @@
-# Vercel Deploy Package
+# LeverUp 文档站点
 
-Upload this folder to GitHub and import it in Vercel.
+主文档为实施手册，另外两份为附录。

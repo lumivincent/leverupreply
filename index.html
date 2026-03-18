@@ -3,238 +3,967 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LeverUp Playbook Architecture</title>
-  <meta name="description" content="LeverUp Playbook Architecture 中文网页版" />
+  <title>LeverUp 文档中心</title>
   <style>
-    :root{
-      --font-sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC","Hiragino Sans GB", "Microsoft YaHei", "Noto Sans CJK SC", Arial, sans-serif;
-      --border-radius-lg: 20px;
-      --border-radius-md: 14px;
-      --color-border-tertiary: #d9dde5;
-      --color-border-secondary: #bcc3cf;
-      --color-background-secondary: #ffffff;
-      --color-text-primary: #111827;
-      --color-text-secondary: #667085;
-      --color-text-tertiary: #98a2b3;
+    :root {
+      --bg:#0b1020; --panel:#121933; --panel2:#0f1530; --text:#eef2ff; --muted:#b9c2e6;
+      --line:#253056; --accent:#7aa2ff; --accent2:#9ed0ff; --code:#0a1229;
     }
     *{box-sizing:border-box}
-    html,body{margin:0;padding:0;background:#f5f7fb;color:var(--color-text-primary);font-family:var(--font-sans);}
-    .page{max-width:1280px;margin:0 auto;padding:32px 20px 48px;}
-    .hero{margin-bottom:24px;padding:24px 28px;border-radius:24px;background:linear-gradient(135deg,#ffffff 0%,#f7f9ff 100%);border:1px solid #e6eaf2;box-shadow:0 10px 30px rgba(17,24,39,.06);}
-    .hero h1{font-size:30px;line-height:1.2;margin:0 0 10px;}
-    .hero p{font-size:15px;line-height:1.75;color:var(--color-text-secondary);margin:0;}
-    .layout-grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(320px,.95fr);gap:20px;align-items:start}
-    .card{padding:18px;border-radius:24px;background:#fff;border:1px solid #e6eaf2;box-shadow:0 10px 30px rgba(17,24,39,.04);}
-    .logic-card,.sidebar-card{border-radius:24px}
-    .sidebar-card{position:sticky;top:20px;padding:20px 22px;max-height:calc(100vh - 40px);overflow:auto}
-    .sidebar-card h2{font-size:20px;margin:0 0 8px}
-    .sidebar-tip{font-size:13px;color:var(--color-text-secondary);margin-bottom:14px}
-    .playbook-render{font-size:14px;line-height:1.75;color:var(--color-text-primary)}
-    .playbook-render h1,.playbook-render h2,.playbook-render h3,.playbook-render h4{line-height:1.35;margin:1.2em 0 .55em}
-    .playbook-render h1{font-size:24px}
-    .playbook-render h2{font-size:20px;padding-top:6px;border-top:1px solid #eef2f7}
-    .playbook-render h3{font-size:17px}
-    .playbook-render p{margin:.55em 0}
-    .playbook-render ul,.playbook-render ol{padding-left:1.35em;margin:.55em 0}
-    .playbook-render li{margin:.25em 0}
-    .playbook-render code{padding:.15em .4em;border-radius:8px;background:#f3f4f6;font-size:.92em}
-    .playbook-render pre{padding:14px;border-radius:14px;background:#111827;color:#f9fafb;overflow:auto}
-    .playbook-render pre code{background:transparent;padding:0;color:inherit}
-    .playbook-render table{width:100%;border-collapse:collapse;display:block;overflow:auto;margin:14px 0;background:#fff}
-    .playbook-render th,.playbook-render td{border:1px solid #e5e7eb;padding:9px 10px;text-align:left;vertical-align:top;min-width:120px}
-    .playbook-render th{background:#f8fafc}
-    .playbook-render hr{border:none;border-top:1px dashed #d7dce5;margin:18px 0}
-    .footer-note{margin-top:18px;font-size:12px;color:var(--color-text-secondary);text-align:center}
-    @media(max-width:980px){
-      .layout-grid{grid-template-columns:1fr}
-      .sidebar-card{position:static;max-height:none}
-    }
-    @media(prefers-color-scheme:dark){
-      :root{
-        --color-border-tertiary: #333a46;
-        --color-border-secondary: #4b5563;
-        --color-background-secondary: #151922;
-        --color-text-primary: #f3f4f6;
-        --color-text-secondary: #b7c0cf;
-        --color-text-tertiary: #8b95a7;
-      }
-      html,body{background:#0b0f16}
-      .hero,.card{background:#101520;border-color:#1f2937;box-shadow:none}
-      .hero{background:linear-gradient(135deg,#121826 0%,#0f1420 100%)}
-      .playbook-render code{background:#1f2937}
-      .playbook-render th,.playbook-render td{border-color:#344152}
-      .playbook-render th{background:#161d29}
-      .playbook-render table{background:transparent}
-      .playbook-render h2{border-top-color:#243041}
+    html,body{margin:0;padding:0;background:linear-gradient(180deg,#0a1020,#0e1530);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"PingFang SC","Hiragino Sans GB","Microsoft YaHei",sans-serif}
+    a{color:var(--accent2)}
+    .layout{display:grid;grid-template-columns:300px 1fr;min-height:100vh}
+    .sidebar{position:sticky;top:0;height:100vh;padding:24px;border-right:1px solid var(--line);background:rgba(10,16,32,.78);backdrop-filter: blur(10px);overflow:auto}
+    .brand{font-size:22px;font-weight:800;margin-bottom:8px}
+    .sub{color:var(--muted);font-size:14px;line-height:1.6;margin-bottom:20px}
+    .group-title{font-size:12px;letter-spacing:.08em;text-transform:uppercase;color:#93a0cf;margin:18px 0 10px}
+    .nav-btn{display:block;width:100%;text-align:left;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--panel);color:var(--text);margin-bottom:10px;cursor:pointer}
+    .nav-btn.active{border-color:var(--accent);box-shadow:0 0 0 1px rgba(122,162,255,.3) inset;background:#182247}
+    .nav-btn .small{display:block;color:var(--muted);font-size:12px;margin-top:4px}
+    .content{padding:28px;min-width:0}
+    .topbar{display:flex;justify-content:space-between;gap:16px;align-items:center;margin-bottom:18px;flex-wrap:wrap}
+    .panel{background:rgba(18,25,51,.88);border:1px solid var(--line);border-radius:20px;padding:18px}
+    .doc-section{display:none}
+    .doc-section.active{display:block}
+    .doc-badge{display:inline-block;padding:6px 10px;border-radius:999px;background:#1b2859;color:#cfe0ff;font-size:12px;border:1px solid #30438b;margin-bottom:8px}
+    .markdown-body{line-height:1.8;color:#e9eeff;word-break:break-word}
+    .markdown-body h1,.markdown-body h2,.markdown-body h3,.markdown-body h4{line-height:1.35;margin-top:1.4em}
+    .markdown-body h1{font-size:32px}
+    .markdown-body h2{font-size:24px;border-bottom:1px solid var(--line);padding-bottom:8px}
+    .markdown-body h3{font-size:19px}
+    .markdown-body p,.markdown-body li{font-size:15px;color:#e8edff}
+    .markdown-body blockquote{margin:16px 0;padding:10px 14px;border-left:4px solid var(--accent);background:#11193a;color:#dbe5ff;border-radius:10px}
+    .markdown-body pre{background:var(--code);padding:14px;border-radius:14px;overflow:auto;border:1px solid #1d2a57}
+    .markdown-body code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,"Liberation Mono",monospace}
+    .markdown-body :not(pre) > code{background:#151f46;padding:2px 6px;border-radius:6px}
+    .markdown-body table{border-collapse:collapse;width:100%;display:block;overflow:auto;margin:18px 0}
+    .markdown-body th,.markdown-body td{border:1px solid var(--line);padding:10px 12px;text-align:left}
+    .markdown-body th{background:#121b3f}
+    .markdown-body hr{border:none;border-top:1px solid var(--line);margin:24px 0}
+    @media (max-width: 960px) {
+      .layout{grid-template-columns:1fr}
+      .sidebar{position:relative;height:auto;border-right:none;border-bottom:1px solid var(--line)}
+      .content{padding:18px}
+      .markdown-body h1{font-size:26px}
+      .markdown-body h2{font-size:22px}
     }
   </style>
 </head>
 <body>
-  <main class="page">
-    <section class="hero">
-      <h1>LeverUp Playbook Architecture</h1>
-      <p>左侧是逻辑图，右侧是你新增的 Playbook 正文。这个版本不依赖外部脚本，兼容性更高，适合直接部署到 Vercel。</p>
-    </section>
-    <div class="layout-grid">
-      <section class="card logic-card">
-        <style>
-*{box-sizing:border-box;margin:0;padding:0}
-body{font-family:var(--font-sans)}
-.layer{margin:0 0 2px;padding:16px 20px;border-radius:var(--border-radius-lg);border:0.5px solid var(--color-border-tertiary);background:var(--color-background-secondary)}
-.layer-title{font-size:15px;font-weight:500;color:var(--color-text-primary);margin:0 0 12px}
-.layer-sub{font-size:12px;color:var(--color-text-secondary);margin:-8px 0 12px}
-.flow-row{display:flex;gap:8px;align-items:stretch;flex-wrap:wrap}
-.box{padding:10px 14px;border-radius:var(--border-radius-md);border:0.5px solid;font-size:12px;line-height:1.5;flex:1;min-width:120px;cursor:default;transition:transform .15s}
-.box:hover{transform:translateY(-1px)}
-.box b{display:block;font-size:13px;font-weight:500;margin:0 0 2px}
-.box-purple{background:#EEEDFE;border-color:#AFA9EC;color:#3C3489}
-.box-teal{background:#E1F5EE;border-color:#5DCAA5;color:#085041}
-.box-blue{background:#E6F1FB;border-color:#85B7EB;color:#0C447C}
-.box-amber{background:#FAEEDA;border-color:#FAC775;color:#633806}
-.box-coral{background:#FAECE7;border-color:#F0997B;color:#712B13}
-.box-green{background:#EAF3DE;border-color:#97C459;color:#27500A}
-.box-pink{background:#FBEAF0;border-color:#ED93B1;color:#72243E}
-.box-gray{background:#F1EFE8;border-color:#B4B2A9;color:#444441}
-.box-red{background:#FCEBEB;border-color:#F09595;color:#791F1F}
-@media(prefers-color-scheme:dark){
-.box-purple{background:#26215C;border-color:#534AB7;color:#CECBF6}
-.box-teal{background:#04342C;border-color:#0F6E56;color:#9FE1CB}
-.box-blue{background:#042C53;border-color:#185FA5;color:#B5D4F4}
-.box-amber{background:#412402;border-color:#854F0B;color:#FAC775}
-.box-coral{background:#4A1B0C;border-color:#993C1D;color:#F5C4B3}
-.box-green{background:#173404;border-color:#3B6D11;color:#C0DD97}
-.box-pink{background:#4B1528;border-color:#993556;color:#F4C0D1}
-.box-gray{background:#2C2C2A;border-color:#5F5E5A;color:#D3D1C7}
-.box-red{background:#501313;border-color:#A32D2D;color:#F7C1C1}
+  <div class="layout">
+    <aside class="sidebar">
+      <div class="brand">LeverUp 文档中心</div>
+      <div class="sub">已按你的要求重排：<br>第一个是实施手册，另外两个归入附录。</div>
+      <div class="group-title">主文档</div>
+      <button class="nav-btn active" data-target="doc1">实施手册<span class="small">先看这个，按步骤执行</span></button>
+      <div class="group-title">附录</div>
+      <button class="nav-btn" data-target="doc2">附录 A：Universal Playbook<span class="small">项目知识底座与回复规范</span></button>
+      <button class="nav-btn" data-target="doc3">附录 B：Claude Code 架构方案<span class="small">系统设计与自动化框架</span></button>
+    </aside>
+    <main class="content">
+      <div class="topbar">
+        <div class="panel">当前站点内容已被这 3 份文档完全覆盖。</div>
+      </div>
+      <div class="panel">
+        
+    <section id="doc1" class="doc-section active">
+      <div class="doc-badge">主文档</div>
+      <h1>实施手册</h1>
+      <div class="doc-content markdown-body">
+      <h1>LeverUp Reply Agent — Claude Code 实施手册</h1>
+<blockquote>
+<p>本手册是你在终端里跟 Claude Code 协作的完整操作指南。
+每个 Step 都有：你要做什么 → 给 Claude Code 的 prompt → 验证标准。
+按顺序执行，每步确认再继续。</p>
+</blockquote>
+<hr />
+<h2>前置准备清单</h2>
+<p>在开始之前，确认以下环境：</p>
+<pre><code class="language-bash"># 确认 Node.js
+node --version    # 需要 &gt;= 18
+
+# 确认 Claude Code
+claude --version  # 需要已安装
+
+# 确认 Python
+python3 --version # 需要 &gt;= 3.10
+
+# 确认 Git
+git --version
+</code></pre>
+<p>准备好以下文件（从我们的对话中下载）：</p>
+<ul>
+<li><code>LeverUp_Reply_Agent_Universal_Playbook.md</code></li>
+<li><code>LeverUp_Reply_Agent_Claude_Code_Architecture.md</code></li>
+</ul>
+<p>准备好 Twitter API 密钥（4 个值）：</p>
+<ul>
+<li><code>TWITTER_API_KEY</code></li>
+<li><code>TWITTER_API_SECRET</code></li>
+<li><code>TWITTER_ACCESS_TOKEN</code></li>
+<li><code>TWITTER_ACCESS_SECRET</code></li>
+</ul>
+<hr />
+<h1>Phase 0：项目初始化</h1>
+<h2>Step 0.1：创建项目结构</h2>
+<p><strong>你在终端执行（不是 Claude Code 里）：</strong></p>
+<pre><code class="language-bash"># 创建项目
+mkdir leverup-reply-agent &amp;&amp; cd leverup-reply-agent
+git init
+
+# 创建完整目录结构
+mkdir -p .claude/skills/{reply-rules,thread-analysis,incoming-handler,fud-protocol,daily-report,weekly-review,reply-composer,self-learning/scripts}
+mkdir -p .claude/agents
+mkdir -p .claude/commands
+mkdir -p .claude/hooks
+mkdir -p memory/{accounts,formats,learning-cards}
+mkdir -p reports/{daily,weekly}
+mkdir -p evolution
+mkdir -p scripts
+mkdir -p frontend/{public,src/{components,pages,hooks,lib,styles}}
+
+# 创建空的核心文件
+touch CLAUDE.md
+touch .claude/settings.json
+touch .env
+
+# 把你的两份文档放进来
+# 手动复制到项目根目录：
+# LeverUp_Reply_Agent_Universal_Playbook.md → PLAYBOOK.md
+# LeverUp_Reply_Agent_Claude_Code_Architecture.md → ARCHITECTURE.md
+
+# 创建 .gitignore
+cat &gt; .gitignore &lt;&lt; 'EOF'
+node_modules/
+.env
+__pycache__/
+*.pyc
+memory/learning-cards/*.jsonl
+reports/daily/*.md
+reports/weekly/*.md
+.claude/settings.local.json
+EOF
+
+# 创建 .env 文件（填入你的真实密钥）
+cat &gt; .env &lt;&lt; 'EOF'
+TWITTER_API_KEY=your_key_here
+TWITTER_API_SECRET=your_secret_here
+TWITTER_ACCESS_TOKEN=your_token_here
+TWITTER_ACCESS_SECRET=your_token_secret_here
+EOF
+
+# 初始提交
+git add .
+git commit -m &quot;init: project structure with playbook and architecture docs&quot;
+</code></pre>
+<h2>Step 0.2：启动 Claude Code</h2>
+<pre><code class="language-bash">cd leverup-reply-agent
+claude
+</code></pre>
+<hr />
+<h1>Phase 1：基础架构搭建</h1>
+<blockquote>
+<p>目标：CLAUDE.md + 所有 Skills + Subagents + 初始记忆 + 前端骨架
+预计时间：2-3 小时（跟 Claude Code 来回几轮）</p>
+</blockquote>
+<hr />
+<h2>Step 1.1：让 Claude Code 理解项目</h2>
+<p><strong>复制以下 prompt 到 Claude Code：</strong></p>
+<pre><code>请仔细阅读项目根目录下的这两个文件：
+1. PLAYBOOK.md - LeverUp Reply Agent 的完整规则文档（v2.9）
+2. ARCHITECTURE.md - Claude Code 适配的自学习架构方案
+
+读完后，请回答以下 3 个问题（不写代码）：
+1. 这个 agent 的核心工作流是什么？用一句话概括
+2. ARCHITECTURE.md 的文件结构和当前项目目录是否完全一致？如果有差异请列出
+3. 你认为 Phase 1 应该先做哪个文件？为什么？
+</code></pre>
+<p><strong>验证标准：</strong> Claude Code 能准确描述&quot;7×24 持续扫描 Twitter，按 Rule 1-6 决策，L1 速度轨/L2-L3 质量轨检查，发布回复并记录 Learning Card，UTC 0:00 日结自检更新记忆&quot;。如果描述偏了，纠正它再继续。</p>
+<hr />
+<h2>Step 1.2：生成 CLAUDE.md</h2>
+<p><strong>复制以下 prompt：</strong></p>
+<pre><code>现在请根据 ARCHITECTURE.md 第三节&quot;CLAUDE.md 设计&quot;的内容，生成 CLAUDE.md 文件。
+
+严格要求：
+- 控制在 120-150 行以内（这是 Claude Code 的最佳实践，过长会被忽略）
+- 账号权限等级设为 intern
+- 所有 Skills 引用指向 .claude/skills/ 下的对应目录
+- 记忆读取指向 memory/ 目录
+- 包含决策链摘要（Rule 1 → Rule 2 → Rule 3 → Section 5）
+- 包含语气人格锚定（正面示例 + 反面示例各 3 条）
+- 包含 Subagent 使用指引
+- 不要包含详细的规则内容（那些在 Skills 里）
+
+请直接写入 CLAUDE.md 文件。
+</code></pre>
+<p><strong>验证标准：</strong> 打开 CLAUDE.md 检查行数（应 &lt; 150 行），确认包含身份、决策链摘要、Skills 引用路径、记忆读取指引、Subagent 列表。</p>
+<p><strong>如果需要调整：</strong></p>
+<pre><code>CLAUDE.md 有以下问题需要修改：[描述问题]。请修改。
+</code></pre>
+<p>确认后：</p>
+<pre><code class="language-bash">git add CLAUDE.md &amp;&amp; git commit -m &quot;feat: CLAUDE.md core identity&quot;
+</code></pre>
+<hr />
+<h2>Step 1.3：创建 Skills（逐个创建）</h2>
+<h3>Skill 1：reply-rules</h3>
+<p><strong>复制以下 prompt：</strong></p>
+<pre><code>请创建 .claude/skills/reply-rules/SKILL.md
+
+这个 Skill 包含 PLAYBOOK.md 中的以下内容：
+- S0 项目知识底座（完整版，包括 0.1-0.6）
+- S3 核心规则 Rule 1-6（完整内容）
+- S4.1 Outgoing 优先级 P0-P4
+- S2.1 权限等级完整表格
+
+frontmatter 格式：
+---
+name: reply-rules
+description: LeverUp reply agent 的核心决策规则。包含 Rule 1-6 快速过滤、目标设定、投入等级、质量检查、自然提及边界，以及项目知识底座和权限表。当 agent 需要决定是否回复、如何回复时自动触发。
+---
+
+请从 PLAYBOOK.md 中提取对应内容，保持原文不做删改，只做格式适配。
+注意 Rule 1 中的阈值引用 memory/thresholds.json。
+</code></pre>
+<p><strong>验证标准：</strong> 检查 SKILL.md 文件，确认 frontmatter 格式正确，内容完整覆盖 S0 + S3 + S4.1 + S2.1。</p>
+<h3>Skill 2：thread-analysis</h3>
+<pre><code>请创建 .claude/skills/thread-analysis/SKILL.md
+
+包含 PLAYBOOK.md 中的：
+- S5 决策流程（轨道选择规则、速度轨 3 项检查、质量轨 3 步流程 + 4 项检查）
+- S5.2 thread 类型表（9 种类型 + 冲突优先级）
+- S5.3 时间窗口参考表
+
+frontmatter：
+---
+name: thread-analysis
+description: Thread 类型判断、决策轨道选择和质量检查规则。当 agent 进入质量轨（L2/L3）需要分析 thread 类型、选择回复策略时自动触发。也包含时间窗口参考。
+---
+</code></pre>
+<h3>Skill 3：incoming-handler</h3>
+<pre><code>请创建 .claude/skills/incoming-handler/SKILL.md
+
+包含 PLAYBOOK.md 中的：
+- S4.2 Incoming 优先级完整内容（Step 1 互动方式分流 + Step 2 按序匹配表 + bot/spam 判断特征 + 待补充阈值表）
+
+frontmatter：
+---
+name: incoming-handler
+description: 处理 incoming engagement 的优先级判断规则。当有人回复、引用、@、点赞 agent 时触发。包含互动方式分流、按序匹配表、bot/spam 判断标准。
+---
+</code></pre>
+<h3>Skill 4：fud-protocol</h3>
+<pre><code>请创建 .claude/skills/fud-protocol/SKILL.md
+
+包含 PLAYBOOK.md 中的：
+- S10 FUD/攻击应对协议完整内容（10.1 分级应对含示例、10.2 应对原则、10.3 可用回应框架、10.4 绝对红线）
+
+frontmatter：
+---
+name: fud-protocol
+description: FUD 和攻击的分级应对协议。当 thread 被判定为 FUD/质疑型时触发。包含轻度/中度/重度分级标准、按权限等级的应对方式、可用回应框架模板、绝对红线规则。
+---
+</code></pre>
+<h3>Skill 5：reply-composer</h3>
+<pre><code>请创建 .claude/skills/reply-composer/SKILL.md
+
+包含 PLAYBOOK.md 中的：
+- S6 输出格式（质量轨 9 字段模板 + 速度轨 3 字段模板）
+- 新增：Learning Card 格式（JSON schema，从 ARCHITECTURE.md 第五节 5.1 获取）
+
+frontmatter：
+---
+name: reply-composer
+description: 回复起草的输出格式模板。包含质量轨完整思考模板、速度轨极简模板、以及 Learning Card 记录格式。当 agent 起草回复时触发。
+---
+</code></pre>
+<h3>Skill 6：daily-report</h3>
+<pre><code>请创建 .claude/skills/daily-report/SKILL.md
+
+包含 PLAYBOOK.md 中的：
+- S7.4 日结输出固定格式
+- S7.5 日结自检与调整（记忆更新表 + 策略微调表）
+- S7.6 每日达标线
+
+frontmatter：
+---
+name: daily-report
+description: 每日日结报告的生成规则。包含日结固定输出格式、日结自检与调整规则（记忆更新 + 策略微调）、每日达标线。在 UTC 0:00 由 daily-reporter subagent 加载使用。
+---
+</code></pre>
+<h3>Skill 7：weekly-review</h3>
+<pre><code>请创建 .claude/skills/weekly-review/SKILL.md
+
+包含 PLAYBOOK.md 中的：
+- S8.1 周结输出固定格式
+- S8.2 周结自检与调整表
+- S8.3 每周达标线
+- S8.4 团队 KPI（待补充）
+
+frontmatter：
+---
+name: weekly-review
+description: 每周复盘报告的生成规则。包含周结固定格式（7 天汇总）、周结自检与调整规则（再平衡 + 模式迭代 + 记忆清理）、每周达标线。在每周日 UTC 0:00 由 weekly-reviewer subagent 加载使用。
+---
+</code></pre>
+<p><strong>每个 Skill 创建后都确认一下，然后：</strong></p>
+<pre><code class="language-bash">git add .claude/skills/ &amp;&amp; git commit -m &quot;feat: all 7 skills created from playbook&quot;
+</code></pre>
+<hr />
+<h2>Step 1.4：创建 Subagents</h2>
+<p><strong>复制以下 prompt：</strong></p>
+<pre><code>请按照 ARCHITECTURE.md 第七节的设计，依次创建以下 5 个 subagent 文件：
+
+1. .claude/agents/reply-drafter.md
+功能：L2/L3 质量轨回复起草。隔离 context，加载 thread-analysis + reply-composer skill。
+输入：thread 信息（作者、内容、类型、现有回复）
+输出：回复草稿 + 质量轨思考模板
+tools: Read, Write, WebSearch
+
+2. .claude/agents/daily-reporter.md
+功能：生成日结报告 + 执行日结自检 + 更新记忆文件。
+加载：daily-report skill
+读取：当日 learning cards + memory/ 所有文件
+输出：reports/daily/YYYY-MM-DD.md + 更新后的 memory 文件
+tools: Read, Write
+
+3. .claude/agents/weekly-reviewer.md
+功能：生成周结报告 + 执行周结自检。
+加载：weekly-review skill
+读取：最近 7 天日结 + memory/ 所有文件
+输出：reports/weekly/YYYY-WXX.md + 更新后的 memory 文件
+tools: Read, Write
+
+4. .claude/agents/competitor-scanner.md
+功能：扫描竞品 Twitter 动态，更新 memory/competitors.jsonl。
+读取：memory/competitors.jsonl（当前竞品列表）
+输出：更新后的 competitors.jsonl
+tools: Read, Write, WebSearch
+
+5. .claude/agents/pattern-analyzer.md
+功能：分析 learning cards 数据，发现模式，生成规则修改提案。
+读取：memory/learning-cards/ 最近 7 天 + memory/ 所有文件 + .claude/skills/ 所有 SKILL.md
+输出：evolution/PROPOSALS.md（中/高风险）+ evolution/LEARNINGS.md（低风险，直接执行）
+tools: Read, Write
+
+每个 subagent 使用 YAML frontmatter 格式。请逐个创建。
+</code></pre>
+<p>确认后：</p>
+<pre><code class="language-bash">git add .claude/agents/ &amp;&amp; git commit -m &quot;feat: 5 subagents created&quot;
+</code></pre>
+<hr />
+<h2>Step 1.5：创建初始记忆文件</h2>
+<pre><code>请在 memory/ 目录下创建以下初始数据文件：
+
+1. memory/accounts/priority.jsonl
+空文件，顶部注释说明格式：
+// 每行一条 JSON：{&quot;handle&quot;: &quot;@xxx&quot;, &quot;tier&quot;: &quot;P1&quot;, &quot;reason&quot;: &quot;...&quot;, &quot;added_at&quot;: &quot;...&quot;, &quot;status&quot;: &quot;active&quot;}
+
+2. memory/accounts/engagement-back.jsonl
+空文件，顶部注释说明格式：
+// 每行一条 JSON：{&quot;handle&quot;: &quot;@xxx&quot;, &quot;last_interaction&quot;: &quot;...&quot;, &quot;interaction_type&quot;: &quot;reply/like/quote&quot;, &quot;status&quot;: &quot;active/watching/removed&quot;}
+
+3. memory/formats/effective.jsonl
+预填 PLAYBOOK.md S9C 的 6 个初始格式，每个格式一行 JSON：
+{&quot;format&quot;: &quot;sharp one-liner&quot;, &quot;status&quot;: &quot;new&quot;, &quot;success_count&quot;: 0, &quot;last_used&quot;: null}
+...依次填 6 个
+
+4. memory/formats/failed.jsonl
+预填 PLAYBOOK.md S9D 的 5 个初始模式：
+{&quot;pattern&quot;: &quot;generic filler&quot;, &quot;status&quot;: &quot;new&quot;, &quot;fail_count&quot;: 0, &quot;last_seen&quot;: null}
+...依次填 5 个
+
+5. memory/competitors.jsonl
+空文件，注释格式：
+// {&quot;handle&quot;: &quot;@xxx&quot;, &quot;name&quot;: &quot;...&quot;, &quot;category&quot;: &quot;perp_dex&quot;, &quot;last_scanned&quot;: null}
+
+6. memory/relationships.jsonl
+空文件，注释格式：
+// {&quot;handle&quot;: &quot;@xxx&quot;, &quot;stage&quot;: &quot;stranger/recognized/engaged/stable/high_value/deep_collab&quot;, &quot;last_interaction&quot;: null, &quot;history&quot;: []}
+
+7. memory/thresholds.json
+创建一个 JSON 文件，包含所有动态阈值的合理默认值：
+{
+  &quot;follower_high&quot;: 50000,
+  &quot;follower_low&quot;: 5000,
+  &quot;follower_spam&quot;: 50,
+  &quot;engagement_threshold&quot;: 10,
+  &quot;scan_interval_incoming_min&quot;: 5,
+  &quot;scan_interval_main_account_min&quot;: 10,
+  &quot;scan_interval_p1_min&quot;: 15,
+  &quot;scan_interval_p2p3_hour&quot;: 1,
+  &quot;scan_interval_competitors_hour&quot;: 4,
+  &quot;narrative_keywords&quot;: [&quot;LP-free&quot;, &quot;uncapped OI&quot;, &quot;Monad perps&quot;, &quot;fee redistribution&quot;, &quot;LVUSD&quot;, &quot;LeverUp&quot;]
 }
-.arrow-down{text-align:center;font-size:18px;color:var(--color-text-tertiary);padding:4px 0;line-height:1}
-.arrow-label{font-size:11px;color:var(--color-text-secondary);text-align:center;padding:0 0 2px}
-.divider{height:0;border-top:0.5px dashed var(--color-border-tertiary);margin:12px 0}
-.feedback-arrow{display:flex;align-items:center;gap:8px;padding:8px 0}
-.feedback-arrow .line{flex:1;height:0;border-top:1.5px dashed var(--color-border-secondary)}
-.feedback-arrow .label{font-size:11px;color:var(--color-text-secondary);white-space:nowrap}
-.section-ref{font-size:11px;color:var(--color-text-tertiary);font-weight:400}
-</style>
+</code></pre>
+<p>确认后：</p>
+<pre><code class="language-bash">git add memory/ &amp;&amp; git commit -m &quot;feat: initial memory files with defaults&quot;
+</code></pre>
+<hr />
+<h2>Step 1.6：创建斜线命令</h2>
+<pre><code>请创建以下 Claude Code 斜线命令：
 
-<div style="padding:0.5rem 0">
+1. .claude/commands/health.md
+描述：检查 agent 配置状态。扫描 CLAUDE.md、所有 Skills、Subagents、memory 文件，输出一份健康报告。
 
-<div class="layer">
-<div class="layer-title">基础层 — 身份、知识与权限 <span class="section-ref">S0 S1 S2</span></div>
-<div class="flow-row">
-<div class="box box-purple"><b>S0 项目知识底座</b>核心差异化、红线表述、不能说的话</div>
-<div class="box box-purple"><b>S1 目标</b>4 件事：支持主账号、获得注意、建立网络、显得原生</div>
-<div class="box box-purple"><b>S2 角色与权限</b>intern/growth/official 权限表 + 语气人格示例</div>
-</div>
-</div>
+2. .claude/commands/daily.md
+描述：手动触发日结。spawn daily-reporter subagent，生成今日日结报告。
 
-<div class="arrow-down">↓</div>
-<div class="arrow-label">所有决策都引用基础层</div>
+3. .claude/commands/weekly.md
+描述：手动触发周结。先执行日结，再 spawn weekly-reviewer + pattern-analyzer subagents。
 
-<div class="layer">
-<div class="layer-title">决策引擎 — 回什么、怎么回 <span class="section-ref">S3 S4 S5 S6</span></div>
-<div class="flow-row" style="margin-bottom:10px">
-<div class="box box-teal"><b>Rule 1 — 快速过滤</b>5 条硬指标，任一命中即放行。只管"看不看"</div>
-<div class="box box-teal"><b>Rule 2 — 设目标</b>每条回复必须先选 1 个目标</div>
-<div class="box box-teal"><b>Rule 3 — 定投入</b>P0-P4 × L1/L2/L3 查表</div>
-</div>
-<div class="flow-row" style="margin-bottom:10px">
-<div class="box box-teal"><b>Rule 4 — 不 generic</b>黑名单：gm、bullish、huge…</div>
-<div class="box box-teal"><b>Rule 5 — 有增量</b>至少增加 1 项：humor / observation / data…</div>
-<div class="box box-teal"><b>Rule 6 — 不硬蹭</b>自然提及 vs 强行带项目的边界</div>
-</div>
-<div class="divider"></div>
-<div class="flow-row" style="margin-bottom:10px">
-<div class="box box-blue"><b>S4.1 Outgoing 优先级</b>P0→P1→P2→P3→P4 回谁</div>
-<div class="box box-blue"><b>S4.2 Incoming 优先级</b>Step1 互动方式分流 → Step2 按序匹配表</div>
-</div>
-<div class="divider"></div>
-<div class="flow-row">
-<div class="box box-amber"><b>S5 速度轨（L1）</b>3 项检查：相关 + 有增量 + 不 generic → 发布</div>
-<div class="box box-amber"><b>S5 质量轨（L2/L3）</b>判断 thread 类型 → 选目标 → 4 项检查（+不硬蹭）→ 发布</div>
-<div class="box box-gray"><b>S5.3 时间窗口</b>&lt;5 分钟最优 → 5-30 正常 → 30-60 衰减 → &gt;1 小时跳过</div>
-</div>
-</div>
+4. .claude/commands/scan.md
+描述：手动触发一次扫描。读取 memory/thresholds.json，扫描所有数据源，输出当前 reply 队列。
 
-<div class="arrow-down">↓</div>
-<div class="arrow-label">决策链：R1 → R2 → R3 → S5 轨道检查 → 发布或跳过</div>
+5. .claude/commands/propose.md
+描述：查看 evolution/PROPOSALS.md 中的待审批提案，允许逐条批准或拒绝。
 
-<div class="layer">
-<div class="layer-title">执行层 — 7×24 持续运行 <span class="section-ref">S6 S7</span></div>
-<div class="flow-row" style="margin-bottom:10px">
-<div class="box box-coral"><b>S6 输出格式</b>质量轨：9 字段思考模板；速度轨：3 字段极简模板</div>
-<div class="box box-coral"><b>S7.1 运行模式</b>持续扫描 + 每日 UTC 0:00 触发日结 + 周日触发周结</div>
-</div>
-<div class="flow-row" style="margin-bottom:10px">
-<div class="box box-coral"><b>S7.2 扫描频率</b>Incoming：[X]分钟、主账号：[X]分钟、P1：[X]分钟、P2-3：[X]小时、竞品：[X]小时</div>
-<div class="box box-coral"><b>S7.3 实时回复队列</b>动态队列，按对象价值 > 时机新鲜度 > 关系升温排序</div>
-</div>
-<div class="flow-row">
-<div class="box box-coral"><b>S7.3 单条实时检查</b>4 个问题：为什么回、目标、投入等级、网络位置</div>
-<div class="box box-coral"><b>S7.3 格式偏好</b>优先用 9C 有效格式，回避 9D 失败模式</div>
-</div>
-</div>
+每个命令文件使用标准 markdown 格式，包含清晰的指令步骤。
+</code></pre>
+<p>确认后：</p>
+<pre><code class="language-bash">git add .claude/commands/ &amp;&amp; git commit -m &quot;feat: slash commands for manual operations&quot;
+</code></pre>
+<hr />
+<h1>Phase 2：后端 — Twitter API + 核心逻辑</h1>
+<blockquote>
+<p>目标：agent 能连接 Twitter，扫描、决策、起草回复、记录数据
+预计时间：3-4 小时</p>
+</blockquote>
+<hr />
+<h2>Step 2.1：后端项目初始化</h2>
+<pre><code>请在项目根目录创建后端 Python 项目：
 
-<div class="arrow-down">↓</div>
-<div class="arrow-label">每日 UTC 0:00 / 每周日 UTC 0:00</div>
+1. 创建 requirements.txt：
+tweepy&gt;=4.14
+python-dotenv
+schedule
+fastapi
+uvicorn
+pydantic
 
-<div class="layer">
-<div class="layer-title">复盘与进化闭环 <span class="section-ref">S7.4-7.6 S8</span></div>
-<div class="flow-row" style="margin-bottom:10px">
-<div class="box box-green"><b>S7.4 日结报告</b>固定格式：统计、最佳/最差回复、Incoming 响应率、关系进展、明日优先</div>
-<div class="box box-green"><b>S7.5 日结自检</b>记忆更新（9C/9D/9B）+ 策略微调（扫描频率、对象平衡、L2+ 推动）</div>
-<div class="box box-green"><b>S7.6 每日达标线</b>≥1 次 L2+、Incoming 30 分钟内 100%、日结已提交</div>
-</div>
-<div class="divider"></div>
-<div class="flow-row">
-<div class="box box-green"><b>S8.1 周结报告</b>7 天汇总：分布、结果 top3、网络进展、格式/模式复盘</div>
-<div class="box box-green"><b>S8.2 周结自检</b>对象再平衡、投入再平衡、模式迭代、EB 清理、竞品刷新</div>
-<div class="box box-green"><b>S8.3-8.4 周达标线 + 团队 KPI</b>[待团队补充]</div>
-</div>
-</div>
+2. 创建 scripts/__init__.py
 
-<div class="feedback-arrow"><span class="label">↑ 更新记忆</span><span class="line"></span><span class="label">下次扫描时读取 ↓</span></div>
+3. 创建 scripts/config.py：
+- 从 .env 读取 Twitter API 密钥
+- 从 memory/thresholds.json 读取阈值配置
+- 定义项目路径常量（MEMORY_DIR, REPORTS_DIR, EVOLUTION_DIR 等）
 
-<div class="layer">
-<div class="layer-title">记忆系统 — 唯一数据源 <span class="section-ref">S9</span></div>
-<div class="layer-sub">本节只定义结构。更新由 S7.5（日结自检）和 S8.2（周结自检）执行</div>
-<div class="flow-row">
-<div class="box box-pink"><b>9A 优先账号</b>[待补充] 最重要的目标列表</div>
-<div class="box box-pink"><b>9B 回流账号</b>谁回过你。衰减：2 周→观察，4 周→移出</div>
-<div class="box box-pink"><b>9C 有效格式</b>状态：新增 → 已验证有效 → 周结确认保留</div>
-<div class="box box-pink"><b>9D 失败模式</b>状态：新增 → 已验证失败 → 周结确认淘汰</div>
-<div class="box box-pink"><b>9E 竞品追踪</b>功能、事故、叙事、数据。频率见 S7.2</div>
-</div>
-<div style="margin-top:10px">
-<div class="box box-pink" style="max-width:420px"><b>关系升温路径</b>陌生 → 识别 → 回流 → 稳定 → 高价值 → 深度合作</div>
-</div>
-</div>
+4. 创建 scripts/models.py：
+- 定义 Pydantic models：
+  - LearningCard（对应 ARCHITECTURE.md 5.1 的 JSON schema）
+  - ReplyMeta（回复元数据：target, tier, thread_type, effort, goal, format, content, network_position）
+  - TweetInfo（推文信息：id, author, content, likes, replies, quotes, created_at）
+  - UserInfo（用户信息：handle, followers, bio, created_at）
+  - ThresholdConfig（阈值配置）
 
-<div class="arrow-down">↓</div>
-<div class="arrow-label">FUD/质疑型 thread 触发</div>
+请创建这些基础文件。
+</code></pre>
+<pre><code class="language-bash">pip install -r requirements.txt
+git add scripts/ requirements.txt &amp;&amp; git commit -m &quot;feat: backend project init with models&quot;
+</code></pre>
+<hr />
+<h2>Step 2.2：Twitter API 封装</h2>
+<pre><code>请创建 scripts/twitter_api.py，封装以下功能（使用 tweepy v2 API）：
 
-<div class="layer">
-<div class="layer-title">异常处理 <span class="section-ref">S10</span></div>
-<div class="flow-row">
-<div class="box box-red"><b>10.1 FUD 分级</b>轻度（好奇）→ 中度（带论点批评）→ 重度（恶意抹黑）。每级有示例 + 按权限应对</div>
-<div class="box box-red"><b>10.2 应对原则</b>不承诺、不泄露、不对骂、只用事实</div>
-<div class="box box-red"><b>10.3 回应框架</b>轻度：引导看文档。中度：机制事实回应。重度：截图 + 上报</div>
-<div class="box box-red"><b>10.4 绝对红线</b>造谣 rug / 虚假漏洞 / 人身攻击 → 沉默 + 标记团队</div>
-</div>
-</div>
+class TwitterClient:
+    def __init__(self):
+        # 从 config.py 读取密钥，初始化 tweepy client
 
-<div style="margin-top:16px;padding:12px 16px;border-radius:var(--border-radius-md);border:0.5px dashed var(--color-border-secondary);font-size:12px;color:var(--color-text-secondary);line-height:1.8">
-<b style="color:var(--color-text-primary)">三个运行循环</b><br>
-<b>持续循环：</b>扫描 → R1 过滤 → R2 设目标 → R3 定投入 → S5 轨道检查 → 发布 → 记录数据<br>
-<b>日循环（UTC 0:00）：</b>日结报告 → 自检 → 更新 S9 记忆 → 微调策略 → 读取最新记忆 → 继续运行<br>
-<b>周循环（周日 UTC 0:00）：</b>先完成日结 → 周结报告 → 自检 → 调整策略 + 清理记忆 → 读取最新记忆 → 继续运行
-</div>
+    def scan_user_timeline(self, handle: str, max_results: int = 10) -&gt; list[TweetInfo]:
+        # 获取指定用户最新推文
 
-</div>
-      </section>
-      <aside class="card sidebar-card">
-        <h2>Reply Agent Playbook</h2>
-        <div class="sidebar-tip">右侧内容已直接写进页面，不再依赖外部脚本渲染。</div>
-        <div class="playbook-render"><h1>LeverUp Reply Agent — Universal Playbook</h1>
+    def scan_mentions(self, max_results: int = 20) -&gt; list[TweetInfo]:
+        # 获取 agent 账号的 mentions/replies
+
+    def get_thread(self, tweet_id: str) -&gt; dict:
+        # 获取完整 thread：原推 + conversation 中的所有回复
+        # 返回 {&quot;original&quot;: TweetInfo, &quot;replies&quot;: [TweetInfo, ...]}
+
+    def post_reply(self, tweet_id: str, content: str) -&gt; str:
+        # 发布回复，返回新推文 ID
+        # 安全检查：内容不超过 280 字符
+
+    def get_tweet_metrics(self, tweet_id: str) -&gt; dict:
+        # 获取推文互动数据：{&quot;likes&quot;: int, &quot;replies&quot;: int, &quot;quotes&quot;: int, &quot;impressions&quot;: int}
+
+    def get_user_info(self, handle: str) -&gt; UserInfo:
+        # 获取用户信息
+
+每个方法都要有：
+- 完整的 type hints
+- 错误处理（API 限流、网络错误）
+- 日志记录
+- docstring
+
+请先写 scan_user_timeline 和 get_user_info，我测试通过后再继续其他方法。
+</code></pre>
+<p><strong>测试：</strong></p>
+<pre><code>请写一个简单的测试：
+1. 用 TwitterClient 扫描 @LeverUp_xyz 最新 5 条推文
+2. 打印每条推文的：作者、内容前 50 字、发布时间、互动数据
+3. 获取 @LeverUp_xyz 的用户信息并打印
+
+运行测试，确认 API 连接正常。
+</code></pre>
+<p>确认 API 能通后：</p>
+<pre><code>现在请补全 TwitterClient 的剩余方法：scan_mentions, get_thread, post_reply, get_tweet_metrics。
+
+post_reply 先加一个 dry_run 参数，默认 True，True 时只打印不真的发布。
+</code></pre>
+<pre><code class="language-bash">git add scripts/ &amp;&amp; git commit -m &quot;feat: twitter API client with all methods&quot;
+</code></pre>
+<hr />
+<h2>Step 2.3：核心决策引擎</h2>
+<pre><code>请创建 scripts/decision_engine.py，实现 agent 的核心决策逻辑：
+
+class DecisionEngine:
+    def __init__(self, twitter_client: TwitterClient):
+        self.twitter = twitter_client
+        self.thresholds = load_thresholds()  # 从 memory/thresholds.json
+        self.memory = load_memory()  # 从 memory/ 目录加载所有记忆
+
+    def rule1_filter(self, tweet: TweetInfo, user: UserInfo) -&gt; tuple[bool, str]:
+        &quot;&quot;&quot;
+        Rule 1 快速过滤。检查 5 个硬指标（任一命中返回 True）：
+        1. 账号命中（priority.jsonl / engagement-back.jsonl / 粉丝量阈值）
+        2. 主账号需要（@LeverUp_xyz 的推文）
+        3. 时机+热度（发布时间 + 互动数据阈值）
+        4. Incoming（mention/reply/quote 给我们的）
+        5. 话题命中（核心叙事关键词匹配）
+
+        返回：(是否放行, 放行原因)
+        &quot;&quot;&quot;
+
+    def rule2_set_goal(self, tweet: TweetInfo, user: UserInfo) -&gt; str:
+        &quot;&quot;&quot;
+        Rule 2 设目标。基于对象层级和 thread 内容，选择 1 个目标。
+        返回目标字符串。
+        &quot;&quot;&quot;
+
+    def rule3_effort_level(self, user: UserInfo) -&gt; str:
+        &quot;&quot;&quot;
+        Rule 3 查投入等级。基于对象的 P0-P4 层级，查表返回 L1/L2/L3。
+        &quot;&quot;&quot;
+
+    def classify_thread_type(self, tweet: TweetInfo, thread: dict) -&gt; str:
+        &quot;&quot;&quot;
+        判断 thread 类型（9 种之一）。
+        如果多个类型命中，按优先级：FUD &gt; 竞品动态 &gt; 赛道对比 &gt; 其他。
+        &quot;&quot;&quot;
+
+    def speed_track_check(self, draft: str, tweet: TweetInfo) -&gt; tuple[bool, list[str]]:
+        &quot;&quot;&quot;
+        速度轨 3 项检查：相关 / 有增量 / 不 generic。
+        返回：(是否通过, 未通过的检查项列表)
+        &quot;&quot;&quot;
+
+    def quality_track_check(self, draft: str, tweet: TweetInfo) -&gt; tuple[bool, list[str]]:
+        &quot;&quot;&quot;
+        质量轨 4 项检查：相关 / 有增量 / 不 generic / 不硬蹭。
+        返回：(是否通过, 未通过的检查项列表)
+        &quot;&quot;&quot;
+
+    def get_object_tier(self, user: UserInfo) -&gt; str:
+        &quot;&quot;&quot;
+        判断用户属于 P0-P4 哪个层级。
+        查 memory/accounts/priority.jsonl 和 engagement-back.jsonl。
+        &quot;&quot;&quot;
+
+    def run_decision_chain(self, tweet: TweetInfo) -&gt; dict:
+        &quot;&quot;&quot;
+        完整决策链：Rule 1 → Rule 2 → Rule 3 → 分轨 → 检查
+        返回：{
+            &quot;should_reply&quot;: bool,
+            &quot;reason&quot;: str,
+            &quot;tier&quot;: str,  # P0-P4
+            &quot;goal&quot;: str,
+            &quot;effort&quot;: str,  # L1/L2/L3
+            &quot;track&quot;: str,  # speed/quality
+            &quot;thread_type&quot;: str,
+            &quot;checks_passed&quot;: bool,
+            &quot;failed_checks&quot;: list[str]
+        }
+        &quot;&quot;&quot;
+
+请实现这个类。rule1_filter 中的阈值从 self.thresholds 读取。
+记忆查询从 self.memory 读取（load_memory 从 memory/ 目录加载所有 jsonl 文件）。
+
+先实现 rule1_filter 和 get_object_tier，我验证后继续。
+</code></pre>
+<p>逐步验证每个方法后：</p>
+<pre><code>现在请补全 DecisionEngine 的所有剩余方法，并实现 run_decision_chain 完整流程。
+
+同时创建一个 load_memory() 函数在 scripts/memory_manager.py 里：
+- 读取 memory/ 下所有 jsonl 文件
+- 返回一个 dict，key 是文件名（如 &quot;priority&quot;, &quot;engagement_back&quot;），value 是 list[dict]
+- 支持 save_memory() 写回 jsonl
+- 支持 append_learning_card() 追加 learning card
+</code></pre>
+<pre><code class="language-bash">git add scripts/ &amp;&amp; git commit -m &quot;feat: decision engine + memory manager&quot;
+</code></pre>
+<hr />
+<h2>Step 2.4：回复生成器</h2>
+<pre><code>请创建 scripts/reply_generator.py：
+
+class ReplyGenerator:
+    def __init__(self, twitter_client: TwitterClient):
+        self.twitter = twitter_client
+
+    def generate_reply(self, tweet: TweetInfo, thread: dict, decision: dict) -&gt; str:
+        &quot;&quot;&quot;
+        基于决策结果生成回复内容。
+
+        这个方法的核心逻辑：
+        1. 读取 memory/formats/effective.jsonl 获取有效格式偏好
+        2. 读取 memory/formats/failed.jsonl 获取应回避的模式
+        3. 根据 decision[&quot;effort&quot;] 决定回复深度：
+           - L1：简短、锋利、&lt; 140 字
+           - L2：有观察有数据、140-280 字
+           - L3：带 meme/定制 framing
+        4. 根据 decision[&quot;thread_type&quot;] 选择策略（参照 thread-analysis skill）
+        5. 根据 decision[&quot;goal&quot;] 调整回复方向
+        6. 检查不违反 Rule 4（不 generic）和 Rule 6（不硬蹭）
+
+        返回：回复文本（&lt; 280 字符）
+        &quot;&quot;&quot;
+
+    def create_learning_card(self, tweet: TweetInfo, decision: dict, reply_content: str) -&gt; dict:
+        &quot;&quot;&quot;
+        创建 Learning Card（result 字段留空，等 24h 后回填）。
+        格式参照 ARCHITECTURE.md 5.1。
+        &quot;&quot;&quot;
+
+注意：generate_reply 中的实际文本生成需要调用 LLM。
+在当前阶段，先用模板占位，后续接入 Claude API 或让主 agent 直接生成。
+请在函数中用注释标注 &quot;# TODO: 接入 LLM 生成&quot; 的位置。
+</code></pre>
+<pre><code class="language-bash">git add scripts/ &amp;&amp; git commit -m &quot;feat: reply generator + learning card creator&quot;
+</code></pre>
+<hr />
+<h2>Step 2.5：调度器</h2>
+<pre><code>请创建 scripts/scheduler.py，实现 7×24 运行调度：
+
+import schedule
+from scripts.config import load_thresholds
+from scripts.twitter_api import TwitterClient
+from scripts.decision_engine import DecisionEngine
+from scripts.reply_generator import ReplyGenerator
+from scripts.memory_manager import load_memory, append_learning_card
+
+class AgentScheduler:
+    def __init__(self, dry_run: bool = True):
+        self.dry_run = dry_run  # True = 不真的发推，只记录
+        self.twitter = TwitterClient()
+        self.engine = DecisionEngine(self.twitter)
+        self.generator = ReplyGenerator(self.twitter)
+        self.thresholds = load_thresholds()
+
+    def scan_and_process(self, source: str):
+        &quot;&quot;&quot;
+        扫描指定数据源，对每条 thread 运行决策链：
+        1. 扫描获取推文列表
+        2. 对每条推文：
+           a. run_decision_chain
+           b. 如果 should_reply：生成回复
+           c. 如果 not dry_run：发布回复
+           d. 记录 Learning Card
+        3. 打印处理结果摘要
+        &quot;&quot;&quot;
+
+    def collect_results(self):
+        &quot;&quot;&quot;
+        回收 24h 前的 Learning Cards 的互动数据。
+        读取 learning cards，找到 result 字段为空且发布时间 &gt; 24h 的，
+        用 twitter_api 获取互动数据，回填 result 字段。
+        &quot;&quot;&quot;
+
+    def run_daily_report(self):
+        &quot;&quot;&quot;
+        触发日结：读取今日 learning cards，生成日结报告，执行自检。
+        输出到 reports/daily/YYYY-MM-DD.md。
+        更新 memory/ 文件。
+        &quot;&quot;&quot;
+
+    def run_weekly_review(self):
+        &quot;&quot;&quot;
+        触发周结：汇总 7 天日结，生成周结报告，执行周结自检。
+        输出到 reports/weekly/YYYY-WXX.md。
+        生成 evolution/PROPOSALS.md。
+        &quot;&quot;&quot;
+
+    def start(self):
+        &quot;&quot;&quot;
+        启动调度器：
+        - 按 thresholds 配置的频率注册各扫描任务
+        - 每小时运行一次 collect_results
+        - UTC 0:00 运行 daily_report
+        - 周日 UTC 0:00 额外运行 weekly_review
+        - 进入主循环
+        &quot;&quot;&quot;
+
+    def stop(self):
+        &quot;&quot;&quot;优雅退出&quot;&quot;&quot;
+
+# 入口
+if __name__ == &quot;__main__&quot;:
+    import argparse
+    parser = argparse.ArgumentParser()
+    parser.add_argument(&quot;--dry-run&quot;, action=&quot;store_true&quot;, default=True)
+    parser.add_argument(&quot;--live&quot;, action=&quot;store_true&quot;, help=&quot;真的发推&quot;)
+    args = parser.parse_args()
+
+    scheduler = AgentScheduler(dry_run=not args.live)
+    scheduler.start()
+
+请实现完整代码。
+</code></pre>
+<pre><code class="language-bash">git add scripts/ &amp;&amp; git commit -m &quot;feat: scheduler with full scan-decide-reply loop&quot;
+</code></pre>
+<hr />
+<h2>Step 2.6：端到端测试</h2>
+<pre><code>现在我们做一次完整的端到端测试。请创建 scripts/test_e2e.py：
+
+1. 初始化 TwitterClient, DecisionEngine, ReplyGenerator
+2. 扫描 @LeverUp_xyz 最新 3 条推文
+3. 对每条推文运行完整决策链
+4. 打印详细决策过程：
+   - Rule 1 结果 + 放行原因
+   - 对象层级
+   - 目标
+   - 投入等级
+   - thread 类型
+   - 轨道选择
+   - 检查结果
+   - 如果 should_reply：生成回复草稿并打印
+   - 生成 Learning Card 并打印
+5. 不发布，只输出
+
+运行：python3 scripts/test_e2e.py
+</code></pre>
+<p><strong>验证标准：</strong> 能看到 3 条推文的完整决策过程，至少有 1 条产出了回复草稿。Learning Card 格式正确。</p>
+<pre><code class="language-bash">git add scripts/ &amp;&amp; git commit -m &quot;feat: e2e test passing&quot;
+</code></pre>
+<hr />
+<h1>Phase 3：前端 Dashboard</h1>
+<blockquote>
+<p>目标：一个 Web Dashboard 展示 agent 状态、日结、学习数据
+预计时间：2-3 小时</p>
+</blockquote>
+<hr />
+<h2>Step 3.1：前端项目初始化</h2>
+<pre><code>请在 frontend/ 目录下创建一个 Next.js 项目（使用 App Router + Tailwind CSS + shadcn/ui）。
+
+这个 Dashboard 需要以下页面：
+
+1. / (首页/仪表盘)
+   - agent 运行状态（是否在线、上次扫描时间）
+   - 今日回复统计卡片（总数、P0-P4 分布、L1-L3 分布）
+   - 今日最佳回复展示
+   - Incoming 响应率
+
+2. /replies (回复历史)
+   - 所有 Learning Cards 的列表视图
+   - 筛选：按日期、对象层级、投入等级、thread 类型
+   - 每条显示：目标账号、回复内容、结果数据（likes/replies）
+
+3. /reports (日结/周结)
+   - 日结列表 + 详情查看
+   - 周结列表 + 详情查看
+   - 达标线达成状态（绿色/红色指示）
+
+4. /memory (记忆状态)
+   - 9A Priority Accounts 列表（可编辑）
+   - 9B Engagement-Back 列表（带状态标记）
+   - 9C Effective Formats（带验证状态）
+   - 9D Failed Patterns
+   - 关系升温路径可视化
+
+5. /evolution (进化)
+   - PROPOSALS.md 内容展示（可批准/拒绝）
+   - LEARNINGS.md 展示
+   - CHANGELOG.md 时间线
+
+6. /settings (设置)
+   - thresholds.json 编辑器
+   - 扫描频率调整
+   - 账号权限等级切换
+   - dry_run 开关
+
+请先创建 Next.js 项目骨架 + 布局（侧边导航 + 主内容区）。
+使用深色主题，风格参考 DeFi dashboard 审美。
+不需要先实现 API 对接，先用 mock 数据把 UI 搭好。
+
+先创建项目结构和首页仪表盘。
+</code></pre>
+<h2>Step 3.2：后端 API</h2>
+<pre><code>请创建 scripts/api.py，使用 FastAPI 提供以下 REST API：
+
+GET  /api/status          → agent 运行状态
+GET  /api/stats/today     → 今日统计
+GET  /api/replies         → Learning Cards 列表（支持分页和筛选）
+GET  /api/reports/daily   → 日结列表
+GET  /api/reports/weekly  → 周结列表
+GET  /api/memory          → 所有记忆数据
+POST /api/memory/priority → 添加/编辑 Priority Account
+GET  /api/evolution       → PROPOSALS + LEARNINGS + CHANGELOG
+POST /api/evolution/approve → 批准一条提案
+POST /api/evolution/reject  → 拒绝一条提案
+GET  /api/settings        → 当前设置
+POST /api/settings        → 更新设置（thresholds 等）
+POST /api/control/scan    → 手动触发扫描
+POST /api/control/daily   → 手动触发日结
+POST /api/control/weekly  → 手动触发周结
+
+所有数据从 memory/ 和 reports/ 目录读取。
+支持 CORS（前端 localhost:3000 访问）。
+
+启动命令：uvicorn scripts.api:app --port 8000
+</code></pre>
+<h2>Step 3.3：前端对接 API</h2>
+<pre><code>现在请把前端的 mock 数据替换为真实 API 调用。
+
+1. 创建 frontend/src/lib/api.ts - API 客户端封装
+2. 每个页面改为从 /api/ 获取数据
+3. settings 页面的修改操作调用 POST API
+4. evolution 页面的批准/拒绝调用对应 API
+
+请逐页对接，先从首页仪表盘开始。
+</code></pre>
+<pre><code class="language-bash">git add . &amp;&amp; git commit -m &quot;feat: frontend dashboard + backend API&quot;
+</code></pre>
+<hr />
+<h1>Phase 4：自学习机制</h1>
+<blockquote>
+<p>目标：Learning Card 数据积累 → 模式发现 → 提案生成
+预计时间：跑通后持续运行 2-3 周再启动</p>
+</blockquote>
+<hr />
+<h2>Step 4.1：self-learning Skill + 脚本</h2>
+<pre><code>请创建 .claude/skills/self-learning/SKILL.md 和配套脚本：
+
+SKILL.md 内容：
+- Learning Card 完整 schema
+- 模式发现规则（format × thread_type × result 相关性分析）
+- 提案生成规则（低/中/高风险分级）
+- Backport 流程（从 LEARNINGS.md 到 SKILL.md 的规则更新路径）
+
+scripts/self_learning.py 功能：
+- record: 记录一条 Learning Card
+- review: 查看最近 N 天的学习记录
+- analyze: 分析 learning cards 发现模式
+- propose: 生成规则修改提案
+- approve: 批准并执行一条提案
+- reject: 拒绝一条提案
+
+命令行用法：
+python3 .claude/skills/self-learning/scripts/self_learning.py review --days 7
+python3 .claude/skills/self-learning/scripts/self_learning.py analyze --days 7
+python3 .claude/skills/self-learning/scripts/self_learning.py propose
+</code></pre>
+<h2>Step 4.2：result-collector 自动化</h2>
+<pre><code>请完善 scripts/scheduler.py 中的 collect_results 方法：
+
+1. 每小时运行一次
+2. 扫描 memory/learning-cards/ 所有文件
+3. 找到 result.collected_at 为 null 且发布时间 &gt; 24 小时的 cards
+4. 用 twitter_api.get_tweet_metrics() 获取互动数据
+5. 回填 result 字段
+6. 保存回 jsonl 文件
+
+同时创建一个结果分析函数：
+- 计算今日回复的平均互动数据
+- 标注高于平均的回复为&quot;best&quot;，低于平均的标注为&quot;worst&quot;
+- 供日结 subagent 使用
+</code></pre>
+<hr />
+<h1>Phase 5：部署与运行</h1>
+<blockquote>
+<p>目标：agent 在服务器上 7×24 运行</p>
+</blockquote>
+<hr />
+<h2>Step 5.1：Docker 化</h2>
+<pre><code>请创建以下部署文件：
+
+1. Dockerfile（后端 Python 服务）
+2. frontend/Dockerfile（Next.js 前端）
+3. docker-compose.yml（编排前后端 + 定时任务）
+
+docker-compose 服务：
+- backend: FastAPI 服务（端口 8000）
+- frontend: Next.js（端口 3000）
+- scheduler: 后台运行 scheduler.py（7×24）
+
+环境变量从 .env 读取。
+数据卷挂载 memory/ 和 reports/ 目录。
+</code></pre>
+<h2>Step 5.2：Vercel 部署前端（可选）</h2>
+<pre><code>如果要把前端部署到 Vercel：
+1. frontend/ 目录独立部署
+2. API 指向后端服务器的公网地址
+3. 创建 frontend/next.config.js 配置 API rewrites
+</code></pre>
+<h2>Step 5.3：启动！</h2>
+<pre><code class="language-bash"># 开发模式（dry_run，不真的发推）
+python3 scripts/scheduler.py --dry-run
+
+# 确认输出质量后，开启真实模式
+python3 scripts/scheduler.py --live
+
+# 或用 docker
+docker-compose up -d
+</code></pre>
+<hr />
+<h1>每步验证检查清单</h1>
+<p>在每个大 Phase 结束时，跑一遍检查：</p>
+<h2>Phase 1 完成检查</h2>
+<ul>
+<li>[ ] CLAUDE.md &lt; 150 行</li>
+<li>[ ] 7 个 Skills 都有正确的 frontmatter</li>
+<li>[ ] 5 个 Subagents 都创建</li>
+<li>[ ] memory/ 下所有文件存在且格式正确</li>
+<li>[ ] 5 个斜线命令可用</li>
+<li>[ ] /health 输出正常</li>
+</ul>
+<h2>Phase 2 完成检查</h2>
+<ul>
+<li>[ ] Twitter API 能连接</li>
+<li>[ ] test_e2e.py 能跑通</li>
+<li>[ ] 决策链完整输出正确</li>
+<li>[ ] Learning Card 格式正确</li>
+<li>[ ] scheduler.py --dry-run 能运行 10 分钟不报错</li>
+</ul>
+<h2>Phase 3 完成检查</h2>
+<ul>
+<li>[ ] 前端 6 个页面都能访问</li>
+<li>[ ] API 返回正确数据</li>
+<li>[ ] settings 页面修改能保存</li>
+<li>[ ] evolution 页面批准/拒绝能生效</li>
+</ul>
+<h2>Phase 4 完成检查</h2>
+<ul>
+<li>[ ] result-collector 能回填互动数据</li>
+<li>[ ] analyze 命令能输出模式分析</li>
+<li>[ ] propose 命令能生成提案</li>
+<li>[ ] 提案分级正确（低/中/高风险）</li>
+</ul>
+<hr />
+<h1>Claude Code 使用技巧提醒</h1>
+<ol>
+<li><strong>每个 Step 做完后 git commit</strong>，这样出问题可以回退</li>
+<li><strong>context 满了就 /clear</strong>，开新会话前先确认 CLAUDE.md 在</li>
+<li><strong>复杂任务说 &quot;use subagent&quot;</strong>，避免主 context 膨胀</li>
+<li><strong>先让它读再让它写</strong>，每个新任务先 &quot;请阅读 xxx 文件&quot; 再 &quot;请创建 xxx&quot;</li>
+<li><strong>一次只做一件事</strong>，不要把多个 Step 合在一条消息里</li>
+<li><strong>说清楚验证标准</strong>，&quot;创建完后运行 xxx 测试，确认输出包含 yyy&quot;</li>
+</ol>
+
+      </div>
+    </section>
+    
+    <section id="doc2" class="doc-section ">
+      <div class="doc-badge">附录</div>
+      <h1>附录 A：Universal Playbook</h1>
+      <div class="doc-content markdown-body">
+      <h1>LeverUp Reply Agent — Universal Playbook</h1>
 <hr />
 <h2>0. 项目知识底座</h2>
 <h3>0.1 一句话定位</h3>
@@ -1574,10 +2303,591 @@ body{font-family:var(--font-sans)}
 </tr>
 </tbody>
 </table>
-</div>
-      </aside>
-    </div>
-    <div class="footer-note">Deployed-ready static page for Vercel</div>
-  </main>
+
+      </div>
+    </section>
+    
+    <section id="doc3" class="doc-section ">
+      <div class="doc-badge">附录</div>
+      <h1>附录 B：Claude Code 架构方案</h1>
+      <div class="doc-content markdown-body">
+      <h1>LeverUp Reply Agent — Claude Code 自学习架构方案</h1>
+<hr />
+<h2>一、设计原则</h2>
+<p>基于 Tw93 的核心洞察和 Claude Code 最佳实践：</p>
+<ol>
+<li><strong>CLAUDE.md 极简</strong>：&lt; 150 行，只放 always-on 的身份和决策链摘要</li>
+<li><strong>Progressive Disclosure</strong>：详细规则做成 Skills，需要时才加载，不浪费 context</li>
+<li><strong>Hooks 做自动化</strong>：日结/周结/数据回收不靠 agent &quot;记住&quot;，靠系统架构保证</li>
+<li><strong>Subagents 隔离上下文</strong>：L2/L3 回复起草、日结报告、竞品分析用 subagent，主 agent 保持轻量</li>
+<li><strong>外部反馈驱动学习</strong>：互动数据（点赞/回复/被注意）是唯一客观验证信号</li>
+<li><strong>低风险自主，高风险审批</strong>：记忆更新 agent 自主执行，规则修改写入提案等团队确认</li>
+</ol>
+<hr />
+<h2>二、文件结构</h2>
+<pre><code>leverup-reply-agent/
+│
+├── CLAUDE.md                          # 极简核心（&lt; 150 行）
+│
+├── .claude/
+│   ├── settings.json                  # hooks、permissions、allowedTools 配置
+│   │
+│   ├── skills/                        # Skills：按需加载的知识模块
+│   │   ├── reply-rules/
+│   │   │   └── SKILL.md               # Rule 1-6 + 决策流程 + 检查项
+│   │   ├── thread-analysis/
+│   │   │   └── SKILL.md               # thread 类型判断 + 投入建议 + 时间窗口
+│   │   ├── incoming-handler/
+│   │   │   └── SKILL.md               # Incoming 优先级 Step1+Step2 + bot/spam 判断
+│   │   ├── fud-protocol/
+│   │   │   └── SKILL.md               # FUD 分级应对 + 回应框架 + 红线
+│   │   ├── daily-report/
+│   │   │   └── SKILL.md               # 日结格式 + 自检规则 + 达标线
+│   │   ├── weekly-review/
+│   │   │   └── SKILL.md               # 周结格式 + 自检规则 + 达标线
+│   │   ├── reply-composer/
+│   │   │   └── SKILL.md               # 输出格式模板（质量轨/速度轨）
+│   │   └── self-learning/
+│   │       ├── SKILL.md               # 自学习机制：Learning Card 格式、模式发现、提案生成
+│   │       └── scripts/
+│   │           └── self_learning.py   # 学习数据管理脚本（record/review/propose）
+│   │
+│   ├── agents/                        # Subagents：隔离上下文的专用 agent
+│   │   ├── reply-drafter.md           # L2/L3 回复起草 subagent
+│   │   ├── daily-reporter.md          # 日结报告生成 subagent
+│   │   ├── weekly-reviewer.md         # 周结报告 + 自检 subagent
+│   │   ├── competitor-scanner.md      # 竞品动态扫描 subagent
+│   │   └── pattern-analyzer.md        # 学习数据模式分析 subagent
+│   │
+│   ├── commands/                      # 手动触发的斜线命令
+│   │   ├── health.md                  # /health 检查 agent 配置状态
+│   │   ├── daily.md                   # /daily 手动触发日结
+│   │   ├── weekly.md                  # /weekly 手动触发周结
+│   │   ├── propose.md                 # /propose 查看待审批提案
+│   │   └── learn.md                   # /learn 手动记录一条学习
+│   │
+│   └── hooks/                         # Hooks：自动化触发
+│       ├── post-reply.sh              # 每次发布回复后：记录 Learning Card
+│       ├── utc-midnight.sh            # UTC 0:00：触发日结 subagent
+│       ├── utc-sunday.sh              # 周日 UTC 0:00：触发周结 subagent
+│       ├── result-collector.sh        # 定时回收互动数据（发布后 24h）
+│       └── memory-sync.sh             # 自检完成后：同步记忆文件
+│
+├── memory/                            # 运行时记忆（agent 可读写）
+│   ├── accounts/
+│   │   ├── priority.jsonl             # 9A Priority Accounts
+│   │   └── engagement-back.jsonl      # 9B Engagement-Back
+│   ├── formats/
+│   │   ├── effective.jsonl            # 9C Effective Formats（带状态标记）
+│   │   └── failed.jsonl               # 9D Failed Patterns（带状态标记）
+│   ├── competitors.jsonl              # 9E 竞品动态
+│   ├── relationships.jsonl            # 关系升温路径状态
+│   ├── thresholds.json                # 动态阈值（粉丝量、互动数据、扫描频率）
+│   └── learning-cards/                # 每条回复的学习卡片
+│       ├── 2026-03-18.jsonl
+│       └── ...
+│
+├── reports/                           # 日结/周结输出（subagent 写入）
+│   ├── daily/
+│   │   └── 2026-03-18.md
+│   └── weekly/
+│       └── 2026-W12.md
+│
+├── evolution/                         # 进化层（提案 + 学习记录 + 变更历史）
+│   ├── PROPOSALS.md                   # 待审批的规则修改提案
+│   ├── LEARNINGS.md                   # agent 自主学习记录（低风险，已执行）
+│   └── CHANGELOG.md                   # 已批准并执行的规则变更历史
+│
+└── scripts/                           # 基础设施脚本
+    ├── twitter_api.py                 # Twitter API 封装（扫描、发布、数据回收）
+    ├── scheduler.py                   # 定时调度器（扫描频率、UTC 0:00 触发）
+    └── migrate.py                     # 数据迁移工具
+</code></pre>
+<hr />
+<h2>三、CLAUDE.md 设计（&lt; 150 行）</h2>
+<p>这是 agent 每次对话都会加载的内容，必须极简：</p>
+<pre><code class="language-markdown"># LeverUp Reply Agent
+
+## 身份
+你是 LeverUp 的 reply agent，7×24 持续运行。
+LeverUp 是建在 Monad 上的 LP-free 永续合约 DEX。
+当前账号权限等级：[intern / growth / official]
+
+## 核心差异化（始终记住）
+LP-free | Uncapped OI | 1001x leverage | 100% fee redistribution | LVUSD | Built on Monad
+
+## 绝对不能做
+- 说&quot;零手续费&quot;（正确：100% of protocol fees redistributed to traders）
+- 说&quot;无风险&quot;或&quot;保证收益&quot;
+- 透露未公布的 tokenomics、内部数据、未官宣合作
+- 代表官方做产品承诺（除非 official 权限且团队确认）
+
+## 决策链（每条回复必走）
+Rule 1 快速过滤（5 硬指标任一命中）
+→ Rule 2 设目标（选 1 个）
+→ Rule 3 查投入等级（P0-P4 × L1/L2/L3）
+→ L1 速度轨（3 项检查）/ L2-L3 质量轨（4 项检查）
+→ 发布或跳过
+
+详细规则见 skills/reply-rules/
+thread 分析见 skills/thread-analysis/
+Incoming 处理见 skills/incoming-handler/
+FUD 应对见 skills/fud-protocol/
+
+## 语气
+像一个真的在交易、懂 DeFi infra、偶尔 degen 但不蠢的 builder。
+绝对不发：gm / bullish / huge / this / 纯 emoji / 3 个以上 emoji
+
+## 记忆
+执行前读取 memory/ 目录下的最新记忆。
+优先使用 effective.jsonl 中的格式，回避 failed.jsonl 中的模式。
+关系状态参照 relationships.jsonl。
+
+## 学习
+每条回复后记录 Learning Card 到 memory/learning-cards/。
+日结/周结由 subagent 自动生成。
+规则修改提案写入 evolution/PROPOSALS.md，等团队审批。
+
+## Subagents
+- L2/L3 回复起草 → reply-drafter（隔离 context，加载 thread-analysis skill）
+- 日结 → daily-reporter（加载 daily-report skill + 读取 learning cards）
+- 周结 → weekly-reviewer（加载 weekly-review skill + 读取所有 reports）
+- 竞品扫描 → competitor-scanner（加载竞品追踪记忆）
+- 模式分析 → pattern-analyzer（分析 learning cards，生成提案）
+</code></pre>
+<hr />
+<h2>四、Playbook → Skills 拆分映射</h2>
+<table>
+<thead>
+<tr>
+  <th>原 Playbook Section</th>
+  <th>拆到哪里</th>
+  <th>加载时机</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S0 项目知识底座</td>
+  <td>CLAUDE.md（精简）+ reply-rules SKILL.md（完整）</td>
+  <td>精简版 always-on，完整版按需</td>
+</tr>
+<tr>
+  <td>S1 目标</td>
+  <td>CLAUDE.md（1 句话）</td>
+  <td>always-on</td>
+</tr>
+<tr>
+  <td>S2 角色与权限</td>
+  <td>CLAUDE.md（权限等级）+ reply-rules SKILL.md（权限表）</td>
+  <td>权限等级 always-on，完整表按需</td>
+</tr>
+<tr>
+  <td>S3 Rule 1-6</td>
+  <td>reply-rules SKILL.md</td>
+  <td>每次决策时自动加载</td>
+</tr>
+<tr>
+  <td>S4.1 Outgoing 优先级</td>
+  <td>reply-rules SKILL.md</td>
+  <td>同上</td>
+</tr>
+<tr>
+  <td>S4.2 Incoming 优先级</td>
+  <td>incoming-handler SKILL.md</td>
+  <td>收到 notification 时加载</td>
+</tr>
+<tr>
+  <td>S5 决策流程</td>
+  <td>CLAUDE.md（摘要）+ thread-analysis SKILL.md（完整）</td>
+  <td>摘要 always-on，完整版在质量轨时加载</td>
+</tr>
+<tr>
+  <td>S6 输出格式</td>
+  <td>reply-composer SKILL.md</td>
+  <td>起草回复时加载</td>
+</tr>
+<tr>
+  <td>S7 每日执行</td>
+  <td>CLAUDE.md（运行模式摘要）+ daily-report SKILL.md</td>
+  <td>摘要 always-on，日结时加载</td>
+</tr>
+<tr>
+  <td>S8 每周复盘</td>
+  <td>weekly-review SKILL.md</td>
+  <td>周结时加载</td>
+</tr>
+<tr>
+  <td>S9 记忆机制</td>
+  <td>memory/ 目录（jsonl 数据文件）+ CLAUDE.md（读取指引）</td>
+  <td>数据实时读写，指引 always-on</td>
+</tr>
+<tr>
+  <td>S10 FUD 应对</td>
+  <td>fud-protocol SKILL.md</td>
+  <td>遇到 FUD/质疑型 thread 时加载</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>五、自学习机制详细设计</h2>
+<h3>5.1 Learning Card（每条回复后记录）</h3>
+<pre><code class="language-json">{
+  &quot;id&quot;: &quot;lc_20260318_001&quot;,
+  &quot;timestamp&quot;: &quot;2026-03-18T14:23:00Z&quot;,
+  &quot;reply&quot;: {
+    &quot;target_account&quot;: &quot;@example_user&quot;,
+    &quot;target_tier&quot;: &quot;P1&quot;,
+    &quot;thread_type&quot;: &quot;赛道对比型&quot;,
+    &quot;effort_level&quot;: &quot;L2&quot;,
+    &quot;goal&quot;: &quot;被对方注意到&quot;,
+    &quot;format_used&quot;: &quot;机制对比回复&quot;,
+    &quot;content&quot;: &quot;the LP-free model means...&quot;,
+    &quot;network_position&quot;: &quot;识别阶段&quot;
+  },
+  &quot;result&quot;: {
+    &quot;collected_at&quot;: null,
+    &quot;likes&quot;: null,
+    &quot;replies&quot;: null,
+    &quot;noticed_by_author&quot;: null,
+    &quot;quote_tweets&quot;: null
+  },
+  &quot;learning&quot;: {
+    &quot;what_worked&quot;: null,
+    &quot;what_failed&quot;: null,
+    &quot;confidence&quot;: null,
+    &quot;scope&quot;: null
+  }
+}
+</code></pre>
+<p><code>result</code> 字段由 result-collector hook 在发布后 24 小时自动回填。
+<code>learning</code> 字段由日结 subagent 在 UTC 0:00 分析后填写。</p>
+<h3>5.2 模式发现（周结时 pattern-analyzer subagent 执行）</h3>
+<pre><code>输入：本周所有 Learning Cards（含 result 数据）
+分析维度：
+  - 哪些 format_used + thread_type 组合的 likes/replies 最高？
+  - 哪些 target_tier + effort_level 组合的 noticed_by_author 率最高？
+  - 哪些 goal 类型的回流率最高？
+  - 是否有新的 thread_type 出现在数据中但不在当前 thread-analysis skill 里？
+  - 是否有账号频繁出现在高回流数据中但不在 priority.jsonl 里？
+输出：写入 evolution/PROPOSALS.md
+</code></pre>
+<h3>5.3 提案分级</h3>
+<table>
+<thead>
+<tr>
+  <th>类别</th>
+  <th>风险</th>
+  <th>处理方式</th>
+  <th>示例</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>记忆更新</td>
+  <td>低</td>
+  <td>agent 自主执行，记录到 LEARNINGS.md</td>
+  <td>9C 加一个新格式、9B 加/删一个账号、阈值微调</td>
+</tr>
+<tr>
+  <td>Skill 内容建议</td>
+  <td>中</td>
+  <td>写入 PROPOSALS.md，等团队确认</td>
+  <td>thread-analysis 加新类型、reply-rules 加新关键词</td>
+</tr>
+<tr>
+  <td>核心规则修改</td>
+  <td>高</td>
+  <td>写入 PROPOSALS.md，必须团队确认</td>
+  <td>Rule 6 边界调整、权限表变更、FUD 协议修改</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2>六、Hooks 设计</h2>
+<h3>post-reply hook（每次发布回复后）</h3>
+<pre><code class="language-bash">#!/bin/bash
+# 触发时机：agent 调用 Twitter API 发布回复后
+# 动作：记录一条 Learning Card（result 字段为空，等待回收）
+
+CARD_FILE=&quot;memory/learning-cards/$(date -u +%Y-%m-%d).jsonl&quot;
+# agent 在发布回复时已将回复元数据写入临时文件
+cat /tmp/last_reply_meta.json &gt;&gt; &quot;$CARD_FILE&quot;
+</code></pre>
+<h3>result-collector hook（定时回收互动数据）</h3>
+<pre><code class="language-bash">#!/bin/bash
+# 触发时机：每小时执行一次
+# 动作：检查 24 小时前的 Learning Cards，回填 result 数据
+
+python3 scripts/twitter_api.py collect-results \
+  --cards-dir memory/learning-cards/ \
+  --hours-ago 24
+</code></pre>
+<h3>utc-midnight hook（每日 UTC 0:00）</h3>
+<pre><code class="language-bash">#!/bin/bash
+# 触发时机：UTC 0:00
+# 动作：spawn daily-reporter subagent
+
+echo &quot;触发日结：$(date -u)&quot; &gt;&gt; reports/trigger.log
+# Claude Code 的 hook 触发 subagent
+# daily-reporter 加载 daily-report skill，读取当日 learning cards，生成日结
+</code></pre>
+<h3>utc-sunday hook（每周日 UTC 0:00）</h3>
+<pre><code class="language-bash">#!/bin/bash
+# 触发时机：周日 UTC 0:00（日结完成后）
+# 动作：spawn weekly-reviewer + pattern-analyzer subagents
+
+echo &quot;触发周结：$(date -u)&quot; &gt;&gt; reports/trigger.log
+# weekly-reviewer 加载 weekly-review skill，汇总 7 天日结
+# pattern-analyzer 分析 learning cards，生成 PROPOSALS.md
+</code></pre>
+<hr />
+<h2>七、Subagents 设计</h2>
+<h3>reply-drafter.md（L2/L3 回复起草）</h3>
+<pre><code class="language-yaml">---
+name: reply-drafter
+description: 起草 L2/L3 质量轨回复。隔离 context，不污染主 agent。
+tools: Read, Write, WebSearch
+---
+
+你是 LeverUp reply agent 的回复起草专员。
+
+输入：主 agent 传入的 thread 信息（作者、内容、类型、当前回复）
+加载：skills/thread-analysis + skills/reply-composer
+读取：memory/formats/effective.jsonl + memory/relationships.jsonl
+
+任务：
+1. 判断 thread 类型
+2. 选回复目标
+3. 起草回复
+4. 过 4 项检查（相关/有增量/不 generic/不硬蹭）
+5. 输出：回复草稿 + 思考过程（质量轨模板格式）
+
+返回给主 agent 后，由主 agent 决定是否发布。
+</code></pre>
+<h3>daily-reporter.md（日结报告）</h3>
+<pre><code class="language-yaml">---
+name: daily-reporter
+description: 生成每日日结报告 + 执行日结自检 + 更新记忆。
+tools: Read, Write
+---
+
+你是 LeverUp reply agent 的日结专员。
+
+加载：skills/daily-report
+读取：memory/learning-cards/今日.jsonl + memory/ 所有记忆文件
+
+任务：
+1. 汇总今日 learning cards 数据
+2. 按 daily-report skill 的固定格式生成日结
+3. 执行日结自检（记忆更新 + 策略微调）
+4. 更新 memory/ 下的相关文件
+5. 低风险学习记录到 evolution/LEARNINGS.md
+6. 写入 reports/daily/YYYY-MM-DD.md
+</code></pre>
+<h3>pattern-analyzer.md（模式分析，周结时触发）</h3>
+<pre><code class="language-yaml">---
+name: pattern-analyzer
+description: 分析学习数据，发现模式，生成规则修改提案。
+tools: Read, Write
+---
+
+你是 LeverUp reply agent 的模式分析专员。
+
+读取：memory/learning-cards/ 最近 7 天所有数据 + memory/ 所有记忆文件
+读取：.claude/skills/ 下所有 SKILL.md（了解当前规则）
+
+任务：
+1. 分析 format × thread_type × result 的相关性
+2. 发现高回报模式和低回报模式
+3. 识别当前规则未覆盖的新场景
+4. 识别应升级/降级的账号
+5. 生成提案，按风险分级写入：
+   - 低风险（记忆更新）→ 直接执行 + 记录到 evolution/LEARNINGS.md
+   - 中/高风险（规则修改）→ 写入 evolution/PROPOSALS.md
+</code></pre>
+<hr />
+<h2>八、当前 Playbook 内容的复用情况</h2>
+<table>
+<thead>
+<tr>
+  <th>原 Section</th>
+  <th>复用率</th>
+  <th>去向</th>
+  <th>改动</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>S0 项目知识底座</td>
+  <td>95%</td>
+  <td>CLAUDE.md（精简）+ reply-rules SKILL</td>
+  <td>拆分，不改内容</td>
+</tr>
+<tr>
+  <td>S1 目标</td>
+  <td>100%</td>
+  <td>CLAUDE.md 1 句话</td>
+  <td>精简表述</td>
+</tr>
+<tr>
+  <td>S2 角色与权限</td>
+  <td>95%</td>
+  <td>CLAUDE.md（等级）+ reply-rules SKILL（权限表+语气）</td>
+  <td>拆分</td>
+</tr>
+<tr>
+  <td>S3 Rule 1-6</td>
+  <td>90%</td>
+  <td>reply-rules SKILL</td>
+  <td>阈值改为从 thresholds.json 动态读取</td>
+</tr>
+<tr>
+  <td>S4.1 Outgoing</td>
+  <td>90%</td>
+  <td>reply-rules SKILL</td>
+  <td>列表改为从 priority.jsonl 动态读取</td>
+</tr>
+<tr>
+  <td>S4.2 Incoming</td>
+  <td>100%</td>
+  <td>incoming-handler SKILL</td>
+  <td>直接搬入</td>
+</tr>
+<tr>
+  <td>S5 决策流程</td>
+  <td>95%</td>
+  <td>CLAUDE.md（决策链摘要）+ thread-analysis SKILL</td>
+  <td>拆分</td>
+</tr>
+<tr>
+  <td>S6 输出格式</td>
+  <td>80%</td>
+  <td>reply-composer SKILL</td>
+  <td>加 Learning Card 格式</td>
+</tr>
+<tr>
+  <td>S7 每日执行</td>
+  <td>60%</td>
+  <td>CLAUDE.md（运行模式）+ daily-report SKILL + hooks</td>
+  <td>日结逻辑从&quot;模板填写&quot;改为&quot;数据聚合&quot;</td>
+</tr>
+<tr>
+  <td>S8 每周复盘</td>
+  <td>60%</td>
+  <td>weekly-review SKILL + hooks + pattern-analyzer subagent</td>
+  <td>周结加模式分析和提案生成</td>
+</tr>
+<tr>
+  <td>S9 记忆机制</td>
+  <td>50%</td>
+  <td>memory/ 目录（jsonl 文件）+ CLAUDE.md（读取指引）</td>
+  <td>从 md 描述改为 jsonl 数据存储</td>
+</tr>
+<tr>
+  <td>S10 FUD 应对</td>
+  <td>100%</td>
+  <td>fud-protocol SKILL</td>
+  <td>直接搬入</td>
+</tr>
+</tbody>
+</table>
+<p><strong>总体复用率约 85%。</strong> 核心规则和决策逻辑几乎不变，变的是存储方式（md→jsonl）和加载方式（全量→按需）。</p>
+<hr />
+<h2>九、实施路线</h2>
+<h3>Phase 1：基础执行（1-2 周）</h3>
+<p>目标：agent 能跑起来，按规则回复</p>
+<ul>
+<li>[ ] 搭建文件结构</li>
+<li>[ ] 编写 CLAUDE.md（&lt; 150 行）</li>
+<li>[ ] 将 Playbook 拆分为 Skills</li>
+<li>[ ] 接入 Twitter API（扫描 + 发布）</li>
+<li>[ ] 配置 scheduler.py（扫描频率）</li>
+<li>[ ] 编写 reply-drafter subagent</li>
+<li>[ ] 在 Claude Code 中跑通：扫描 → 决策 → 起草 → 发布</li>
+</ul>
+<h3>Phase 2：数据积累（2-3 周）</h3>
+<p>目标：每条回复开始记录数据</p>
+<ul>
+<li>[ ] 实现 Learning Card 记录（post-reply hook）</li>
+<li>[ ] 实现 result-collector hook（24h 后回收互动数据）</li>
+<li>[ ] 编写 daily-reporter subagent</li>
+<li>[ ] 配置 utc-midnight hook</li>
+<li>[ ] 日结开始从 learning cards 自动生成</li>
+</ul>
+<h3>Phase 3：进化闭环（4-6 周）</h3>
+<p>目标：agent 能自我学习和提出规则修改</p>
+<ul>
+<li>[ ] 编写 weekly-reviewer subagent</li>
+<li>[ ] 编写 pattern-analyzer subagent</li>
+<li>[ ] 实现提案生成机制（PROPOSALS.md）</li>
+<li>[ ] 配置 utc-sunday hook</li>
+<li>[ ] 建立团队审批流程</li>
+<li>[ ] 实现 thresholds.json 动态调整</li>
+</ul>
+<h3>Phase 4：优化迭代（持续）</h3>
+<p>目标：系统稳定运行，持续优化</p>
+<ul>
+<li>[ ] 监控 context 使用情况，优化 Skills 粒度</li>
+<li>[ ] 积累 CHANGELOG.md，追踪规则演化历史</li>
+<li>[ ] 评估是否需要 Agent Teams（多账号并行）</li>
+<li>[ ] 探索 Prompt Caching 优化（CLAUDE.md 和核心 Skills 结构稳定化）</li>
+</ul>
+<hr />
+<h2>十、关键风险和缓解</h2>
+<table>
+<thead>
+<tr>
+  <th>风险</th>
+  <th>缓解措施</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+  <td>Twitter API 限流 / 封号</td>
+  <td>扫描频率保守设置，发布间隔 &gt; 2 分钟，使用官方 API</td>
+</tr>
+<tr>
+  <td>上下文溢出</td>
+  <td>Skills 按需加载 + subagent 隔离 + 定期 /compact</td>
+</tr>
+<tr>
+  <td>自学习失控（agent 改了不该改的）</td>
+  <td>三级提案分级，核心规则修改必须团队确认</td>
+</tr>
+<tr>
+  <td>Learning Card 数据噪音</td>
+  <td>只在 result 数据回填后才纳入分析，忽略无结果数据</td>
+</tr>
+<tr>
+  <td>记忆文件膨胀</td>
+  <td>jsonl 按日分片 + 每月归档 + 旧数据只保留聚合统计</td>
+</tr>
+<tr>
+  <td>Hooks 执行失败</td>
+  <td>每个 hook 有 error log，日结时检查 hook 执行状态</td>
+</tr>
+</tbody>
+</table>
+
+      </div>
+    </section>
+    
+      </div>
+    </main>
+  </div>
+  <script>
+    const buttons = [...document.querySelectorAll('.nav-btn')];
+    const sections = [...document.querySelectorAll('.doc-section')];
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        const target = btn.dataset.target;
+        buttons.forEach(b => b.classList.remove('active'));
+        sections.forEach(s => s.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(target).classList.add('active');
+        window.scrollTo({top:0,behavior:'smooth'});
+      });
+    });
+  </script>
 </body>
 </html>
